@@ -3,7 +3,6 @@ import excited from '../../assets/feelings/excited.jpg';
 import happy from '../../assets/feelings/happy.jpg';
 import loved from '../../assets/feelings/loved.jpg';
 import angry from '../../assets/reactions/angry.png';
-import haha from '../../assets/reactions/happy.png';
 import like from '../../assets/reactions/like.png';
 import love from '../../assets/reactions/love.png';
 import sad from '../../assets/reactions/sad.png';
@@ -197,7 +196,7 @@ export const reactionsMap = {
     love,
     wow,
     sad,
-    haha,
+    happy,
     angry
 };
 
