@@ -43,11 +43,11 @@ const Register = () => {
             </div>}
             <form className="auth-form" onSubmit={registerUser}>
                 <div className="form-input-container">
-                    <Input style={{ borderColor: `${hasError ? "#fa9b8a" : ""}` }}
+                    <Input style={{ border: hasError ? "1px solid #fa9b8a" : "" }}
                         id="username" name="username" type="text" value={username} labelText="username" placeholder="Enter username" handleChange={handleChange} />
-                    <Input style={{ borderColor: `${hasError ? "#fa9b8a" : ""}` }}
+                    <Input style={{ border: hasError ? "1px solid #fa9b8a" : "" }}
                         id="email" name="email" type="email" value={email} labelText="email" placeholder="yourmail@xyz.com" handleChange={handleChange} />
-                    <Input style={{ borderColor: `${hasError ? "#fa9b8a" : ""}` }}
+                    <Input style={{ border: hasError ? "1px solid #fa9b8a" : "" }}
                         id="password" name="password" type="password" value={password} labelText="password" placeholder="Enter password" handleChange={handleChange} />
 
                 </div>

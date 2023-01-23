@@ -10,7 +10,6 @@ const ForgotPassword = () => {
 
     const [email, setEmail] = useState("")
     const [loading, setLoading] = useState(false)
-    const [errorMessage, setErrorMessage] = useState("")
     const [alertType, setAlertType] = useState("")
     const [responseMessage, setResponseMessage] = useState("")
 
@@ -50,7 +49,7 @@ const ForgotPassword = () => {
                                     <div className="form-input-container">
                                         <Input id="email" name="email" type="email" value={email} labelText="email" placeholder="Enter your email" handleChange={(e) => setEmail(e.target.value)} />
                                     </div>
-                                    <Button className="auth-button button" label={loading ? "Password reset in progress" : "RESET PASSWORD"} disabled={!email} />
+                                    <Button className="auth-button button" label={loading ? "On Progress" : "RESET PASSWORD"} disabled={!email} />
 
                                     <Link to="/">
                                         <span className="forgot-password">
