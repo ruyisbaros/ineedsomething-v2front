@@ -2,17 +2,28 @@ import React, { useState, useEffect } from 'react'
 import "./login.scss"
 import { FaArrowRight } from "react-icons/fa"
 import { Input, Button } from '../../components'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { authService } from './../../services/api/auth.service';
 
 const Login = () => {
     const [logUser, setLogUser] = useState({ username: "", password: "" })
+    const { username, password } = logUser
     const [loading, setLoading] = useState(false)
     const [errorMessage, setErrorMessage] = useState("")
     const [alertType, setAlertType] = useState("")
     const [hasError, setHasError] = useState(false)
     const [keepLoggedIn, setKeepLoggedIn] = useState(false)
-    const { username, password } = logUser
+    const [currentUser, setCurrentUser] = useState("")
+
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        if (loading && !currentUser) return;
+        if (currentUser) {
+            setLoading(false)
+            navigate("/app/social/streams")
+        }
+    }, [loading, currentUser, navigate])
 
     // console.log(keepLoggedIn);
     const handleChange = (e) => {
@@ -26,7 +37,7 @@ const Login = () => {
             setLoading(true)
             const res = await authService.login(logUser)
             console.log(res.data);
-            setLoading(false)
+            setCurrentUser(res?.data?.userDocument)
             setAlertType("alert-success")
             setHasError(false)
         } catch (error) {

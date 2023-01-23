@@ -3,20 +3,30 @@ import "./register.scss"
 import { Input, Button } from '../../components'
 import { authService } from './../../services/api/auth.service';
 import { createAvatarColor, generateAvatar } from './../../services/utils/util.service';
+import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
     const [newUser, setNewUser] = useState({ username: "", email: "", password: "" })
+    const { username, email, password } = newUser
     const [loading, setLoading] = useState(false)
     const [errorMessage, setErrorMessage] = useState("")
     const [alertType, setAlertType] = useState("")
     const [hasError, setHasError] = useState(false)
-    const { username, email, password } = newUser
+    const [currentUser, setCurrentUser] = useState("")
+
+    const navigate = useNavigate()
     //console.log(hasError)
     const handleChange = (e) => {
         const { name, value } = e.target
         setNewUser({ ...newUser, [name]: value })
     }
-
+    useEffect(() => {
+        if (loading && !currentUser) return;
+        if (currentUser) {
+            setLoading(false)
+            navigate("/app/social/streams")
+        }
+    }, [loading, currentUser, navigate])
     //console.log(newUser);
     const registerUser = async (e) => {
         e.preventDefault()
@@ -26,7 +36,7 @@ const Register = () => {
             const avatarImage = generateAvatar(username.charAt(0).toUpperCase(), avatarColor)
             const res = await authService.register({ ...newUser, avatarColor, avatarImage })
             console.log(res.data);
-            setLoading(false)
+            setCurrentUser(res?.data?.userDataForCache)
             setAlertType("alert-success")
             setHasError(false)
         } catch (error) {
