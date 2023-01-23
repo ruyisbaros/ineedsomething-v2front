@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import "./login.scss"
 import { FaArrowRight } from "react-icons/fa"
-import { Input, Button } from '../../components'
 import { Link, useNavigate } from 'react-router-dom'
-import { authService } from './../../services/api/auth.service';
+import { useDispatch } from "react-redux";
+import useLocalStorage from '@hooks/useLocalStorage'
+import { Button, Input } from '@components/index';
+import { authService } from '@services/api/auth.service'
+import { dispatchCurrentUser } from '@services/utils/util.service';
+import useSessionStorage from '@hooks/useSessionStorage';
 
 const Login = () => {
     const [logUser, setLogUser] = useState({ username: "", password: "" })
@@ -13,9 +17,12 @@ const Login = () => {
     const [alertType, setAlertType] = useState("")
     const [hasError, setHasError] = useState(false)
     const [keepLoggedIn, setKeepLoggedIn] = useState(false)
-    const [currentUser, setCurrentUser] = useState("")
-
+    const [currentUser, setCurrentUser] = useState(null)
+    const [setStoredUsername] = useLocalStorage("username", "set")
+    const [setLoggedMeIn] = useLocalStorage("keepLoggedIn", "set")
+    const [pageReload] = useSessionStorage("pageReload", "set")
     const navigate = useNavigate()
+    const dispatch = useDispatch()
 
     useEffect(() => {
         if (loading && !currentUser) return;
@@ -37,9 +44,11 @@ const Login = () => {
             setLoading(true)
             const res = await authService.login(logUser)
             console.log(res.data);
-            setCurrentUser(res?.data?.userDocument)
+            setStoredUsername(username)
+            setLoggedMeIn(keepLoggedIn)
             setAlertType("alert-success")
             setHasError(false)
+            dispatchCurrentUser(res, pageReload, dispatch, setCurrentUser)
         } catch (error) {
             setLoading(false)
             setAlertType("alert-error")
@@ -59,7 +68,7 @@ const Login = () => {
                     <Input style={{ border: hasError ? "1px solid #fa9b8a" : "" }}
                         id="password" name="password" type="password" value={password} labelText="password" placeholder="Enter password" handleChange={handleChange} />
                     <label className="checkmark-container" htmlFor="checkbox">
-                        <Input id="checkbox" name="checkbox" type="checkbox" value={keepLoggedIn} onChange={() => setKeepLoggedIn(!keepLoggedIn)} />
+                        <input id="checkbox" name="checkbox" type="checkbox" checked={keepLoggedIn} onChange={() => setKeepLoggedIn(!keepLoggedIn)} />
                         Keep me signed in
                     </label>
                 </div>
