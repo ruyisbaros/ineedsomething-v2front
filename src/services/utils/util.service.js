@@ -1,5 +1,6 @@
 import { avatarColors } from "./static.data"
 import { floor, random } from "lodash"
+import { authLogout, userLoggedSuccess } from "@redux/currentUserSlicer"
 
 export function createAvatarColor() {
     return avatarColors[floor(random(0.9) * avatarColors.length)]
@@ -22,4 +23,19 @@ export function generateAvatar(text, bcgColor, fgColor = "white") {
     context.fillText(text, 100, 100)
 
     return canvas.toDataURL("image/png")
+}
+
+export function dispatchCurrentUser(res, pageReload, dispatch, setCurrentUser) {
+    pageReload(true);
+    dispatch(userLoggedSuccess({ currentUser: res?.data.user, token: res?.data.token }))
+    setCurrentUser(res?.data?.user)
+}
+
+export function clearCurrentUser({ dispatch, deleteStorageUsername, deleteStoragePageReload, setLoggedMeIn, setCurrentUser }) {
+    dispatch(authLogout());
+    //Clear later notifications
+    deleteStorageUsername()
+    deleteStoragePageReload()
+    setLoggedMeIn(false)
+    setCurrentUser(null)
 }
