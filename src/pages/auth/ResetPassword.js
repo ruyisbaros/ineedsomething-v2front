@@ -4,11 +4,31 @@ import { Input, Button } from '../../components'
 import { FaArrowLeft } from "react-icons/fa"
 import { Link } from 'react-router-dom'
 import "./resetPassword.scss"
+import { authService } from './../../services/api/auth.service';
 
 const ResetPassword = () => {
     const [responseMessage, setResponseMessage] = useState("")
     const [password, setPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
+    const [loading, setLoading] = useState(false)
+    const [errorMessage, setErrorMessage] = useState("")
+    const [alertType, setAlertType] = useState("")
+
+    const handleResetPwd = async (e) => {
+        e.preventDefault()
+        try {
+            setLoading(true)
+            const res = await authService.resetPassword(password)
+            console.log(res.data);
+            setLoading(false)
+            setAlertType("alert-success")
+            setResponseMessage(res?.data?.message)
+        } catch (error) {
+            setLoading(false)
+            setAlertType("alert-error")
+            setResponseMessage(error?.response?.data?.message)
+        }
+    }
     return (
         <div className="container-wrapper" style={{ backgroundImage: `url(${bgImage})` }}>
             <div className="environment">DEV</div>
@@ -22,10 +42,10 @@ const ResetPassword = () => {
                         </ul>
                         <div className="tab-item">
                             <div className="auth-inner">
-                                <div className="alerts" role="alert">
-                                    Error message
-                                </div>
-                                <form className="reset-password-form">
+                                {responseMessage && <div className={`alerts ${alertType}`} role="alert">
+                                    {responseMessage}
+                                </div>}
+                                <form className="reset-password-form" onSubmit={handleResetPwd}>
                                     <div className="form-input-container">
                                         <Input id="password" name="password" type="password" value={password}
                                             labelText="New Password" placeholder="New Password" handleChange={() => { }}

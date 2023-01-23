@@ -5,24 +5,26 @@ import { authService } from './../../services/api/auth.service';
 import { createAvatarColor, generateAvatar } from './../../services/utils/util.service';
 
 const Register = () => {
-    const [newUser, setNewUser] = useState({ username: "", email: "", password: "", avatarColor: "", avatarImage: "" })
+    const [newUser, setNewUser] = useState({ username: "", email: "", password: "" })
     const [loading, setLoading] = useState(false)
     const [errorMessage, setErrorMessage] = useState("")
     const [alertType, setAlertType] = useState("")
     const [hasError, setHasError] = useState(false)
     const { username, email, password } = newUser
-
+    //console.log(hasError)
     const handleChange = (e) => {
         const { name, value } = e.target
         setNewUser({ ...newUser, [name]: value })
     }
+
+    //console.log(newUser);
     const registerUser = async (e) => {
         e.preventDefault()
         try {
             setLoading(true)
-            setNewUser({ ...newUser, avatarColor: createAvatarColor() })
-            setNewUser({ ...newUser, avatarImage: generateAvatar(username.charAt(0).toUpperCase(), newUser.avatarColor) })
-            const res = await authService.register(newUser)
+            const avatarColor = createAvatarColor()
+            const avatarImage = generateAvatar(username.charAt(0).toUpperCase(), avatarColor)
+            const res = await authService.register({ ...newUser, avatarColor, avatarImage })
             console.log(res.data);
             setLoading(false)
             setAlertType("alert-success")
@@ -31,7 +33,7 @@ const Register = () => {
             setLoading(false)
             setAlertType("alert-error")
             setHasError(true)
-            setErrorMessage(error?.response.data.message)
+            setErrorMessage(error?.response?.data?.message)
         }
     }
     return (
@@ -41,11 +43,11 @@ const Register = () => {
             </div>}
             <form className="auth-form" onSubmit={registerUser}>
                 <div className="form-input-container">
-                    <Input style={{ border: hasError ? "1px solid #fa9b8a" : "" }}
+                    <Input style={{ borderColor: `${hasError ? "#fa9b8a" : ""}` }}
                         id="username" name="username" type="text" value={username} labelText="username" placeholder="Enter username" handleChange={handleChange} />
-                    <Input style={{ border: hasError ? "1px solid #fa9b8a" : "" }}
+                    <Input style={{ borderColor: `${hasError ? "#fa9b8a" : ""}` }}
                         id="email" name="email" type="email" value={email} labelText="email" placeholder="yourmail@xyz.com" handleChange={handleChange} />
-                    <Input style={{ border: hasError ? "1px solid #fa9b8a" : "" }}
+                    <Input style={{ borderColor: `${hasError ? "#fa9b8a" : ""}` }}
                         id="password" name="password" type="password" value={password} labelText="password" placeholder="Enter password" handleChange={handleChange} />
 
                 </div>
