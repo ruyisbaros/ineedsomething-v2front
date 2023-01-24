@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import bgImage from "../../assets/images/background.jpg"
-import { Input, Button } from '../../components'
+import bgImage from "@assets/images/background.jpg"
+import { Button, Input } from '@components/index';
 import { FaArrowLeft } from "react-icons/fa"
 import { Link, useSearchParams } from 'react-router-dom'
 import "./resetPassword.scss"
-import { authService } from './../../services/api/auth.service';
+import { authService } from '@services/api/auth.service';
 
 const ResetPassword = () => {
     const [responseMessage, setResponseMessage] = useState("")

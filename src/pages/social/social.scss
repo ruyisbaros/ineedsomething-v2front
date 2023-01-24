@@ -4,12 +4,22 @@
     &-sidebar {
         flex: 2;
         max-width: 15%;
-        background-color: red;
+
+        &-content {
+            flex: 6;
+                height: 100vh;
+}
+}
+
+@media (max-width: 1300px) {
+    .dashboard-sidebar {
+        flex: 2;
+        max-width: 20%;
     }
 
-    &-content {
+    .dashboard-content {
         flex: 6;
         height: 100vh;
-        background-color: blue;
     }
+}
 }
