@@ -11,9 +11,6 @@ export function generateAvatar(text, bcgColor, fgColor = "white") {
     const canvas = document.createElement("canvas")
     const context = canvas.getContext("2d")
 
-    /* canvas.width = 200;
-    canvas.height = 200; */
-
     context.fillStyle = bcgColor
     context.fillRect(0, 0, 200, 200)
     context.font = "normal 80px sans-serif"
@@ -38,4 +35,15 @@ export function clearCurrentUser({ dispatch, deleteStorageUsername, deleteStorag
     deleteStoragePageReload()
     setLoggedMeIn(false)
     setCurrentUser(null)
+}
+
+export function appEnvironment() {
+    const env = process.env.REACT_APP_ENVIRONMENT
+    if (env === "development") {
+        return "DEV"
+    } else if (env === "staging") {
+        return "STG"
+    } else {
+        return ""
+    }
 }
