@@ -1,22 +1,25 @@
 import { useState, useEffect, useRef } from 'react';
 import logo from '@assets/images/needsmtg.jpg';
 import { FaCaretDown, FaCaretUp, FaRegBell, FaRegEnvelope } from 'react-icons/fa';
-import { appEnvironment, mapSettingsDropdownItems } from '@services/utils/util.service';
+import { appEnvironment, clearCurrentUser, mapSettingsDropdownItems } from '@services/utils/util.service';
 import Avatar from '@components/avatar/Avatar';
 import '@components/header/header.scss';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import useDetectOutsideClick from '@hooks/useDetectOutsideClick';
 import MessageSidebar from '@components/message-sidebar/MessageSidebar';
 import Dropdown from '@components/dropdown/Dropdpwn';
-import { authService } from '@services/api/auth.service';
 import { useNavigate } from 'react-router-dom';
 import { navigateOnProfiles } from '@services/api/user.service';
+import useLocalStorage from '@hooks/useLocalStorage';
+import useSessionStorage from '@hooks/useSessionStorage';
+import { authService } from '@services/api/auth.service';
 
 const Header = () => {
     const { currentUser } = useSelector(store => store.currentUser)
     //console.log(currentUser._doc.profilePicture)
     const [environment, setEnvironment] = useState("")
     const [settings, setSettings] = useState([])
+    const dispatch = useDispatch()
     const navigate = useNavigate()
     const messageRef = useRef(null)
     const notificationRef = useRef(null)
@@ -24,6 +27,9 @@ const Header = () => {
     const [isMessageActive, setIsMessageActive] = useDetectOutsideClick(messageRef, false)
     const [isNotificationActive, setIsNotificationActive] = useDetectOutsideClick(notificationRef, false)
     const [isSettingsActive, setIsSettingsActive] = useDetectOutsideClick(settingsRef, false)
+    const [deleteStoreUsername] = useLocalStorage("username", "delete")
+    const [setLoggedMeIn] = useLocalStorage("keepLoggedIn", "set")
+    const [deleteStoragePageReload] = useSessionStorage("pageReload", "delete")
 
     const bckgrndColor = `${environment === "DEV" ? "#50b5ff" : environment === "STG" ? "#e9710f" : ""}`
 
@@ -43,8 +49,13 @@ const Header = () => {
     const onMarkAsRead = () => { }
     const onDeleteNotification = () => { }
     const onLogout = async () => {
-        await authService.logout()
-        navigate("/")
+        try {
+            clearCurrentUser({ dispatch, deleteStoreUsername, deleteStoragePageReload, setLoggedMeIn })
+            await authService.logout()
+            navigate("/")
+        } catch (error) {
+            console.log(error)
+        }
     }
     const onNavigate = () => {
         navigateOnProfiles(currentUser, navigate)

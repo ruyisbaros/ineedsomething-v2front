@@ -30,13 +30,12 @@ export async function dispatchCurrentUser(pageReload, dispatch, setCurrentUser) 
     setCurrentUser(res?.data?.user)
 }
 
-export function clearCurrentUser({ dispatch, deleteStorageUsername, deleteStoragePageReload, setLoggedMeIn, setCurrentUser }) {
+export function clearCurrentUser({ dispatch, deleteStoreUsername, deleteStoragePageReload, setLoggedMeIn }) {
     dispatch(authLogout());
     //Clear later notifications
-    deleteStorageUsername()
+    deleteStoreUsername()
     deleteStoragePageReload()
     setLoggedMeIn(false)
-    setCurrentUser(null)
 }
 
 export function appEnvironment() {
