@@ -1,9 +1,17 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import Avatar from '@components/avatar/Avatar';
 import { Button } from '@components/index';
+import { useSelector } from 'react-redux';
 import "./suggestions.scss"
 
 const Suggestions = () => {
+    const { suggestUsers } = useSelector(store => store.suggestions)
+    const [users, setUsers] = useState([])
+
+    useEffect(() => {
+        setUsers(suggestUsers)
+    }, [suggestUsers])
+    console.log(users);
     return (
 
         <div className="suggestions-list-container" data-testid="suggestions-container">

@@ -1,10 +1,18 @@
 import React, { useRef, useState, useEffect } from 'react'
+import { useDispatch } from 'react-redux'
 import "@pages/social/streams/streams.scss"
 import Suggestions from '@components/suggestions/Suggestions'
+import { getUserSuggestions } from '@services/api/suggestion'
 
 const Streams = () => {
     const bodyRef = useRef(null)
     const bottomLineRef = useRef()
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        dispatch(getUserSuggestions())
+    }, [dispatch])
+
     return (
         <div className="streams">
             <div className="streams-content">
