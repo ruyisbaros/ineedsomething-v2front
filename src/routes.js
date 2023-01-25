@@ -7,6 +7,7 @@ import Followers from './pages/social/followers/Followers';
 import Photos from "@pages/social/photos/Photos"
 import Notifications from "@pages/social/notifications/Notifications"
 import Profile from "@pages/social/profile/Profile"
+import ProtectedRoutes from "@pages/ProtectedRoutes"
 
 export const Routers = () => {
 
@@ -25,7 +26,7 @@ export const Routers = () => {
         },
         {
             path: "/app/social",
-            element: <Social />,
+            element: (<ProtectedRoutes><Social /></ProtectedRoutes>),
             children: [
                 {
                     path: "streams",
