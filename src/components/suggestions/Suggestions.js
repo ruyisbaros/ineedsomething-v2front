@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react'
 import Avatar from '@components/avatar/Avatar';
 import { Button } from '@components/index';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import "./suggestions.scss"
 
 const Suggestions = () => {
     const { suggestUsers } = useSelector(store => store.suggestions)
     const [users, setUsers] = useState([])
+    const navigate = useNavigate()
 
     useEffect(() => {
         setUsers(suggestUsers)
@@ -21,7 +23,7 @@ const Suggestions = () => {
             <hr />
             <div className="suggestions-container">
                 <div className="suggestions">
-                    {[]?.map((user, index) => (
+                    {users?.map((user, index) => (
                         <div data-testid="suggestions-item" className="suggestions-item" key={index}>
                             <Avatar
                                 name={user?.username}
@@ -41,9 +43,13 @@ const Suggestions = () => {
                         </div>
                     ))}
                 </div>
-                <div className="view-more">
-                    View More
-                </div>
+                {
+                    users.length >= 3 &&
+                    <div className="view-more"
+                        onClick={() => navigate("/app/social/people")}>
+                        View More
+                    </div>
+                }
             </div>
         </div>
     )

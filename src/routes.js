@@ -1,5 +1,12 @@
 import { useRoutes } from "react-router-dom"
+import Chat from "@pages/social/chat/Chat"
+import Following from "@pages/social/following/Following"
+import People from "@pages/social/people/People"
 import { Auth, ForgotPassword, ResetPassword, Streams, Social } from "./pages"
+import Followers from './pages/social/followers/Followers';
+import Photos from "@pages/social/photos/Photos"
+import Notifications from "@pages/social/notifications/Notifications"
+import Profile from "@pages/social/profile/Profile"
 
 export const Routers = () => {
 
@@ -23,6 +30,34 @@ export const Routers = () => {
                 {
                     path: "streams",
                     element: <Streams />
+                },
+                {
+                    path: "chat/messages",
+                    element: <Chat />
+                },
+                {
+                    path: "people",
+                    element: <People />
+                },
+                {
+                    path: "following",
+                    element: <Following />
+                },
+                {
+                    path: "followers",
+                    element: <Followers />
+                },
+                {
+                    path: "photos",
+                    element: <Photos />
+                },
+                {
+                    path: "notifications",
+                    element: <Notifications />
+                },
+                {
+                    path: "profile/:username",
+                    element: <Profile />
                 },
             ]
         },

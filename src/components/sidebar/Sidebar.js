@@ -1,12 +1,21 @@
 import React, { useState, useEffect } from 'react'
-import "./sidebar.scss"
 import { sideBarItems, fontAwesomeIcons } from '@services/utils/static.data'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate, createSearchParams } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import "./sidebar.scss"
 
 const Sidebar = () => {
-
+    const { currentUser } = useSelector(store => store.currentUser)
     const [sidebar, setSidebar] = useState([])
     const location = useLocation()
+    const navigate = useNavigate()
+
+    const navigateToPage = (name, url) => {
+        if (name === "Profile") {
+            url = `${url}/${currentUser?.username}?${createSearchParams({ uId: currentUser?.uId })}`
+        }
+        navigate(url)
+    }
 
     const activeUrl = (name) => {
         return location.pathname.includes(name.toLowerCase())
@@ -22,7 +31,7 @@ const Sidebar = () => {
                 <ul className="list-unstyled">
                     {
                         sidebar.map((data) => (
-                            <li key={data.index}>
+                            <li key={data.index} onClick={navigateToPage(data.name, data.url)}>
                                 <div className={`sidebar-link ${activeUrl(data.name) ? 'active' : ''}`}>
                                     <div className="menu-icon">
                                         {fontAwesomeIcons[data.iconName]}
