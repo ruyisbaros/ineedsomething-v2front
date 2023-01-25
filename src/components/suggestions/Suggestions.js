@@ -44,7 +44,7 @@ const Suggestions = () => {
                     ))}
                 </div>
                 {
-                    users.length >= 3 &&
+                    users.length >= 8 &&
                     <div className="view-more"
                         onClick={() => navigate("/app/social/people")}>
                         View More

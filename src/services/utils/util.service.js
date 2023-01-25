@@ -1,6 +1,7 @@
 import { avatarColors } from "./static.data"
 import { floor, random } from "lodash"
 import { authLogout, userLoggedSuccess } from "@redux/currentUserSlicer"
+import { currentUser } from "@services/api/user.service"
 
 export function createAvatarColor() {
     return avatarColors[floor(random(0.9) * avatarColors.length)]
@@ -22,8 +23,9 @@ export function generateAvatar(text, bcgColor, fgColor = "white") {
     return canvas.toDataURL("image/png")
 }
 
-export function dispatchCurrentUser(res, pageReload, dispatch, setCurrentUser) {
+export async function dispatchCurrentUser(pageReload, dispatch, setCurrentUser) {
     pageReload(true);
+    const res = await currentUser()
     dispatch(userLoggedSuccess({ currentUser: res?.data.user, token: res?.data.token }))
     setCurrentUser(res?.data?.user)
 }
@@ -46,4 +48,26 @@ export function appEnvironment() {
     } else {
         return ""
     }
+}
+
+export function generateString(length) {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = ' ';
+    const charactersLength = characters.length;
+    for (let i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+}
+export function mapSettingsDropdownItems(setSettings) {
+    const items = []
+
+    const item = {
+        topText: "My Profile",
+        subText: "View Personal Profile"
+    }
+
+    items.push(item)
+    setSettings(items)
+    return items;
 }

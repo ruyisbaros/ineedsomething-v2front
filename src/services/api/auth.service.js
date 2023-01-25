@@ -11,6 +11,7 @@ class AuthService {
         return res;
     }
 
+
     async forgotPassword(email) {
         const res = await axios.post("/auth/forgot_password", { email })
         return res;

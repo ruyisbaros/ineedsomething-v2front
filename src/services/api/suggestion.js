@@ -1,9 +1,9 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { userService } from "./user.service";
+import { userSuggestions } from "./user.service";
 
 const getUserSuggestions = createAsyncThunk("user/getSuggestions", async (name, { dispatch }) => {
     try {
-        const res = await userService.getUserSuggestions()
+        const res = await userSuggestions()
         //console.log(res.data)
         return res.data
     } catch (error) {

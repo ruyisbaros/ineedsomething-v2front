@@ -1,5 +1,5 @@
 import React from 'react'
-import "@components/avatar/avatar.scss"
+import "./avatar.scss"
 
 const Avatar = ({ avatarSource, name, bgColor = "#f33e58", textColor, size, round = true }) => {
 

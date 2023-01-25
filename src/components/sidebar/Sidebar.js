@@ -12,7 +12,7 @@ const Sidebar = () => {
 
     const navigateToPage = (name, url) => {
         if (name === "Profile") {
-            url = `${url}/${currentUser?.username}?${createSearchParams({ uId: currentUser?.uId })}`
+            url = `${url}/${currentUser?.username}?${createSearchParams({ uId: currentUser?.uId, id: currentUser?._id })}`
         }
         navigate(url)
     }
@@ -31,8 +31,9 @@ const Sidebar = () => {
                 <ul className="list-unstyled">
                     {
                         sidebar.map((data) => (
-                            <li key={data.index} onClick={navigateToPage(data.name, data.url)}>
-                                <div className={`sidebar-link ${activeUrl(data.name) ? 'active' : ''}`}>
+                            <li key={data.index} >
+                                <div className={`sidebar-link ${activeUrl(data.name) ? 'active' : ''}`}
+                                    onClick={() => navigateToPage(data.name, data.url)}>
                                     <div className="menu-icon">
                                         {fontAwesomeIcons[data.iconName]}
                                     </div>
