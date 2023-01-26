@@ -6,7 +6,7 @@ export async function userSuggestions() {
         const res = await axios.get("/user/follow_offers")
         return res;
     }
-export async function currentUser() {
+export async function currentUserCheck() {
     const res = await axios.get("/user/is_online")
     return res;
 }

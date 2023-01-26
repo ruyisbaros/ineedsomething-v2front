@@ -8,6 +8,7 @@ import Photos from "@pages/social/photos/Photos"
 import Notifications from "@pages/social/notifications/Notifications"
 import Profile from "@pages/social/profile/Profile"
 import ProtectedRoutes from "@pages/ProtectedRoutes"
+import Error from "@pages/error/Error"
 
 export const Routers = () => {
 
@@ -26,7 +27,11 @@ export const Routers = () => {
         },
         {
             path: "/app/social",
-            element: (<ProtectedRoutes><Social /></ProtectedRoutes>),
+            element: (
+                <ProtectedRoutes>
+                    <Social />
+                </ProtectedRoutes>
+            ),
             children: [
                 {
                     path: "streams",
@@ -62,5 +67,9 @@ export const Routers = () => {
                 },
             ]
         },
+        {
+            path: "*",
+            element: <Error />
+        }
     ])
 }

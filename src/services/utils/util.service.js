@@ -23,9 +23,9 @@ export function generateAvatar(text, bcgColor, fgColor = "white") {
     return canvas.toDataURL("image/png")
 }
 
-export async function dispatchCurrentUser(pageReload, dispatch, setCurrentUser) {
+export function dispatchCurrentUser(res, pageReload, dispatch, setCurrentUser) {
     pageReload(true);
-    const res = await currentUser()
+    //console.log(res.data);
     dispatch(userLoggedSuccess({ currentUser: res?.data.user, token: res?.data.token }))
     setCurrentUser(res?.data?.user)
 }

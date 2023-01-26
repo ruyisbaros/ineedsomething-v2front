@@ -7,7 +7,7 @@ import { userLoggedSuccess } from '@redux/currentUserSlicer'
 import { currentUser } from '@services/api/user.service'
 const App = () => {
 
-  const dispatch = useDispatch()
+  /* const dispatch = useDispatch()
 
   useEffect(() => {
     const syncCurrentUser = async () => {
@@ -17,7 +17,7 @@ const App = () => {
     }
     syncCurrentUser()
   }, [dispatch])
-
+ */
   return (
     <BrowserRouter>
       <Routers />

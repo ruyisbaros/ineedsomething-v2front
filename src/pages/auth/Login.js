@@ -48,7 +48,7 @@ const Login = () => {
             setLoggedMeIn(keepLoggedIn)
             setAlertType("alert-success")
             setHasError(false)
-            await dispatchCurrentUser(pageReload, dispatch, setCurrentUser)
+            dispatchCurrentUser(res, pageReload, dispatch, setCurrentUser)
         } catch (error) {
             setLoading(false)
             setAlertType("alert-error")

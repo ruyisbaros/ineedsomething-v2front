@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import useLocalStorage from '@hooks/useLocalStorage';
 import useSessionStorage from '@hooks/useSessionStorage';
 import useEffectOnce from '@hooks/useEffectOnce';
-import { currentUser } from '@services/api/user.service';
+import { currentUserCheck } from '@services/api/user.service';
 import { userLoggedSuccess } from '@redux/currentUserSlicer';
 import { clearCurrentUser } from '@services/utils/util.service';
 import { authService } from '@services/api/auth.service';
@@ -23,7 +23,8 @@ const ProtectedRoutes = ({ children }) => {
 
     const checkUser = useCallback(async () => {
         try {
-            const res = await currentUser()
+            const res = await currentUserCheck()
+            console.log(res)
             setUserData(res.data.user)
             setIsTokenValid(true)
             dispatch(userLoggedSuccess({ currentUser: res.data.user, token: res.data.token }))
@@ -35,7 +36,7 @@ const ProtectedRoutes = ({ children }) => {
                 navigate("/")
             }, 1000)
         }
-    }, [dispatch, navigate, deleteStoragePageReload, deleteStoreUsername, setLoggedMeIn, currentUser])
+    }, [dispatch, navigate, deleteStoragePageReload, deleteStoreUsername, setLoggedMeIn])
 
     useEffectOnce(() => {
         checkUser()
