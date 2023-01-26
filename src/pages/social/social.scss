@@ -1,0 +1,25 @@
+.dashboard {
+    display: flex;
+
+    &-sidebar {
+        flex: 2;
+        max-width: 15%;
+
+        &-content {
+            flex: 6;
+                height: 100vh;
+}
+}
+
+@media (max-width: 1300px) {
+    .dashboard-sidebar {
+        flex: 2;
+        max-width: 20%;
+    }
+
+    .dashboard-content {
+        flex: 6;
+        height: 100vh;
+    }
+}
+}
