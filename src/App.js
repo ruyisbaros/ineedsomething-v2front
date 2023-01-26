@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import { BrowserRouter } from "react-router-dom"
+import { useSelector } from 'react-redux'
 import { Routers } from './routes'
 import { socketService } from '@services/sockets/socket.service'
 import "./App.scss"
@@ -18,8 +19,7 @@ const App = () => {
     syncCurrentUser()
   }, [dispatch])
  */
-
-  const notifications = []
+  const { notifications } = useSelector(store => store)
 
   useEffect(() => {
     socketService.setupSocketConnection()
@@ -28,7 +28,7 @@ const App = () => {
   return (
     <>
       {notifications && notifications.length > 0 && (
-        <Toast position="top-right" toastList={notifications} autoDelete={false} />
+        <Toast position="top-right" toastList={notifications} autoDelete={true} />
       )}
       <BrowserRouter>
         <Routers />

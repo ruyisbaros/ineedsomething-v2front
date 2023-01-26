@@ -1,20 +1,24 @@
 import React, { useEffect, useCallback, useRef, useState } from 'react'
 import { cloneDeep } from "lodash"
+import { useDispatch } from 'react-redux'
 import "@components/toast/toast.scss"
+import { dispatchClearNotifications } from '@services/utils/util.service'
 
 const Toast = ({ toastList, position, autoDelete, autoDeleteTime = 2000 }) => {
 
     const [list, setList] = useState([])
-    const listData = useRef([])
+    let listData = []
+    const dispatch = useDispatch()
 
     const deleteToast = useCallback(() => {
-        listData.current = cloneDeep(list)
-        listData.current.splice(0, 1)
+        listData = cloneDeep(list)
+        listData.splice(0, 1)
         setList([...listData])
-        if (!listData.current.length) {
-            setList([])
+        if (!listData.length) {
+            list.length = 0
+            dispatchClearNotifications(dispatch)
         }
-    }, [list])
+    }, [list, dispatch])
 
     useEffect(() => {
         setList([...toastList])
@@ -42,7 +46,7 @@ const Toast = ({ toastList, position, autoDelete, autoDeleteTime = 2000 }) => {
                         className={`toast-notification toast ${position}`}
                         style={{ backgroundColor: toast.backgroundColor }}
                     >
-                        <button onClick={() => deleteToast()} className='cancel-button'>X</button>
+                        <button onClick={deleteToast} className='cancel-button'>X</button>
                         <div
                             className={`toast-notification-image ${toast.description.length <= 73 ? "toast-icon" : ""}`}>
                             <img src={toast.icon} alt="" />

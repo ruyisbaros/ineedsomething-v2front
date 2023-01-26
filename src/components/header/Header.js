@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import logo from '@assets/images/needsmtg.jpg';
 import { FaCaretDown, FaCaretUp, FaRegBell, FaRegEnvelope } from 'react-icons/fa';
-import { appEnvironment, clearCurrentUser, mapSettingsDropdownItems } from '@services/utils/util.service';
+import { appEnvironment, clearCurrentUser, dispatchNotifications, mapSettingsDropdownItems } from '@services/utils/util.service';
 import Avatar from '@components/avatar/Avatar';
 import '@components/header/header.scss';
 import { useSelector, useDispatch } from 'react-redux';
@@ -55,7 +55,7 @@ const Header = () => {
             await authService.logout()
             navigate("/")
         } catch (error) {
-            console.log(error)
+            dispatchNotifications(error.response.data.message, "error", dispatch)
         }
     }
     const onNavigate = () => {

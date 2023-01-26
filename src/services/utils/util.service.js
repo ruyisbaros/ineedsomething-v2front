@@ -1,7 +1,7 @@
 import { avatarColors } from "./static.data"
 import { floor, random } from "lodash"
 import { authLogout, userLoggedSuccess } from "@redux/currentUserSlicer"
-import { currentUser } from "@services/api/user.service"
+import { addNotification, clearNotification } from "@redux/notificationSlicer"
 
 export function createAvatarColor() {
     return avatarColors[floor(random(0.9) * avatarColors.length)]
@@ -32,10 +32,18 @@ export function dispatchCurrentUser(res, pageReload, dispatch, setCurrentUser) {
 
 export function clearCurrentUser({ dispatch, deleteStoreUsername, deleteStoragePageReload, setLoggedMeIn }) {
     dispatch(authLogout());
-    //Clear later notifications
+    dispatch(clearNotification())
     deleteStoreUsername()
     deleteStoragePageReload()
     setLoggedMeIn(false)
+}
+
+export function dispatchNotifications(message, type, dispatch) {
+    dispatch(addNotification({ message, type }))
+}
+
+export function dispatchClearNotifications(dispatch) {
+    dispatch(clearNotification())
 }
 
 export function appEnvironment() {
