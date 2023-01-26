@@ -9,6 +9,8 @@ import Notifications from "@pages/social/notifications/Notifications"
 import Profile from "@pages/social/profile/Profile"
 import ProtectedRoutes from "@pages/ProtectedRoutes"
 import Error from "@pages/error/Error"
+import { Suspense } from "react"
+import StreamsSkeleton from "@pages/social/streams/StreamsSkeleton"
 
 export const Routers = () => {
 
@@ -35,7 +37,11 @@ export const Routers = () => {
             children: [
                 {
                     path: "streams",
-                    element: <Streams />
+                    element: (
+                        <Suspense fallback={<StreamsSkeleton />}>
+                            <Streams />
+                        </Suspense>
+                    )
                 },
                 {
                     path: "chat/messages",
