@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux'
 import "@pages/social/streams/streams.scss"
 import Suggestions from '@components/suggestions/Suggestions'
 import { getUserSuggestions } from '@services/api/suggestion'
-import PostForm from '@components/posts/postForm/PostForm'
+import PostForm from '@components/posts/post-form/PostForm'
 
 const Streams = () => {
     const bodyRef = useRef(null)

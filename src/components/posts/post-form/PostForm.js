@@ -1,14 +1,24 @@
 import React, { useState } from 'react'
 import Avatar from '@components/avatar/Avatar'
 import Input from '@components/inputs/Input'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import photo from "@assets/images/photo.png"
 import gif from "@assets/images/gif.png"
 import feeling from "@assets/images/feeling.png"
-import '@components/posts/postForm/postForm.scss';
+import { openModal } from '@redux/postModalSlicer'
+import AddPost from '../post-modal/AddPost'
+import '@components/posts/post-form/postForm.scss';
 
 const PostForm = () => {
     const { currentUser } = useSelector(store => store.currentUser)
+    const { type, isOpen } = useSelector(store => store.modal)
+    const dispatch = useDispatch()
+
+    const openPostModal = () => {
+        dispatch(openModal({ type: "add" }))
+    }
+
+
     return (
         <>
             <div className="post-form" data-testid="post-form">
@@ -17,7 +27,8 @@ const PostForm = () => {
                         <h4 className="post-form-title">Create Post</h4>
                     </div>
                     <div className="post-form-body">
-                        <div className="post-form-input-body" data-testid="input-body">
+                        <div className="post-form-input-body" data-testid="input-body"
+                            onClick={() => openPostModal()}>
                             <Avatar name={currentUser?.username} bgColor={currentUser?.avatarColor} textColor="#ffffff" size={50}
                                 avatarSrc={currentUser?.profilePicture} />
                             <div className="post-form-input" data-placeholder="Write something here..."></div>
@@ -38,6 +49,7 @@ const PostForm = () => {
                     </div>
                 </div>
             </div>
+            {isOpen && type === "add" && <AddPost />}
         </>
 
     )

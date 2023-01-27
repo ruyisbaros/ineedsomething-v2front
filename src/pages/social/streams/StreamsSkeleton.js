@@ -1,6 +1,6 @@
 import '@pages/social/streams/streams.scss';
 import SuggestionsSkeletons from '@components/suggestions/SuggestionSkeleton';
-import PostFormSkeleton from '@components/posts/postForm/PostFormSkeleton';
+import PostFormSkeleton from '@components/posts/post-form/PostFormSkeleton';
 //import PostFormSkeleton from '@components/posts/post-form/PostFormSkeleton';
 //import PostSkeleton from '@components/posts/post/PostSkeleton';
 

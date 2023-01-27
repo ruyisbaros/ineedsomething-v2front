@@ -1,7 +1,7 @@
 import React from 'react'
 import "./avatar.scss"
 
-const Avatar = ({ avatarSource, name, bgColor = "#f33e58", textColor, size, round = true }) => {
+const Avatar = ({ avatarSrc, name, bgColor = "#f33e58", textColor, size, round = true }) => {
 
     const textSizeRatio = 1.7
     const fontSize = Math.floor(size / textSizeRatio)
@@ -10,13 +10,13 @@ const Avatar = ({ avatarSource, name, bgColor = "#f33e58", textColor, size, roun
     return (
         <>
             {
-                !avatarSource && (
+                !avatarSrc && (
                     <div className="avatar-container"
                         style={{
                             width: `${size}px`,
                             height: `${size}px`,
                             borderRadius: `${round ? '50%' : ''}`,
-                            backgroundColor: `${!avatarSource ? bgColor : ''}`,
+                            backgroundColor: `${!avatarSrc ? bgColor : ''}`,
                             display: 'flex'
                         }}
                     >
@@ -36,10 +36,10 @@ const Avatar = ({ avatarSource, name, bgColor = "#f33e58", textColor, size, roun
                     </div>
                 )}
             {
-                avatarSource && (
-                    <img src={avatarSource} alt="" className="avatar-container avatar-content"
+                avatarSrc && (
+                    <img src={avatarSrc} alt="" className="avatar-container avatar-content"
                         style={{
-                            with: `${size}px`, height: `${size}px`, borderRadius: `${round ? '50%' : ''}`
+                            width: `${size}px`, height: `${size}px`, borderRadius: `${round ? '50%' : ''}`
                         }}
                     />
                 )
