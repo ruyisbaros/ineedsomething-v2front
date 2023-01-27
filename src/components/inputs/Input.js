@@ -1,15 +1,25 @@
-import React from 'react'
+import React, { forwardRef } from 'react'
 import "./input.scss"
 
-const Input = ({ id, name, type, value, className, labelText, placeholder, handleChange, style }) => {
+const Input = forwardRef((props, ref) => {
     return (
         <div className='form-row'>
-            {labelText && <label htmlFor={name} className="form-label">{labelText}</label>}
-            <input type={type} style={style} id={id} name={name} placeholder={placeholder}
-                value={value} className={`form-input ${className}`}
-                onChange={handleChange} autoComplete="false" />
+            {props.labelText && <label htmlFor={props.name} className="form-label">{props.labelText}</label>}
+            <input
+                ref={ref}
+                type={props.type}
+                style={props.style}
+                id={props.id}
+                name={props.name}
+                placeholder={props.placeholder}
+                className={`form-input ${props.className}`}
+                value={props.value}
+                onClick={props.onClick}
+                onFocus={props.onFocus}
+                onBlur={props.onBlur}
+                onChange={props.handleChange} autoComplete="false" />
         </div>
     )
-}
+})
 
 export default Input

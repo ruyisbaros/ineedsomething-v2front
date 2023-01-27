@@ -3,20 +3,21 @@ import PostWrapper from '../post-wrapper/PostWrapper'
 import { useSelector } from 'react-redux';
 import photo from "@assets/images/photo.png"
 import gif from "@assets/images/gif.png"
-import feeling from "@assets/images/feeling.png"
+import feelingImg from "@assets/images/feeling.png"
 import Avatar from '@components/avatar/Avatar';
 import { FaGlobe, FaTimes } from 'react-icons/fa';
 import { bgColors, privacyList } from '@services/utils/static.data';
 import Input from '@components/inputs/Input';
-import "./addPost.scss"
 import Button from '@components/buttons/Button';
 import { selectPostBackground } from '@services/utils/postutils.service';
 import SelectDropdown from '@components/select-dropdown/SelectDropdown';
-import useDetectOutsideClick from './../../../hooks/useDetectOutsideClick';
+import useDetectOutsideClick from '@hooks/useDetectOutsideClick';
 import { find } from 'lodash';
+import Feelings from '@components/feelings/Feelings';
+import "./addPost.scss"
 
 const AddPost = () => {
-    const { gifModalIsOpen, feelings } = useSelector(store => store.modal)
+    const { gifModalIsOpen, feeling, feelingsIsOpen } = useSelector(store => store.modal)
     const { currentUser } = useSelector(store => store.currentUser)
     const { privacy } = useSelector(store => store.post)
     const [loading] = useState(false)
@@ -39,7 +40,9 @@ const AddPost = () => {
     })
     const fileInputRef = useRef()
     const privacyRef = useRef(null)
+    const feelingsRef = useRef(null)
     const [togglePrivacy, setTogglePrivacy] = useDetectOutsideClick(privacyRef, false)
+    const [toggleFeelings, setToggleFeelings] = useDetectOutsideClick(feelingsRef, feelingsIsOpen)
 
     const selectBackground = (bgColor) => {
         selectPostBackground(bgColor, postData, setTextAreaBackground, setPostData, setDisable)
@@ -53,6 +56,12 @@ const AddPost = () => {
     }, [privacy])
 
     useEffect(() => { displayPostPrivacy() }, [displayPostPrivacy])
+
+    const fileInputClicked = () => {
+        fileInputRef.current.click()
+    }
+
+    const handleFileChange = (e) => { }
 
     return (
         <>
@@ -79,8 +88,8 @@ const AddPost = () => {
                                 <h5 className="inline-title-display" data-testid="box-username">
                                     {currentUser?.username}
                                 </h5>
-                                {feelings.name && <p className="inline-display" data-testid="box-feeling">
-                                    is feeling <img className="feeling-icon" src={feelings.image} alt="" /> <span>{feelings.name}</span>
+                                {feeling.name && <p className="inline-display" data-testid="box-feeling">
+                                    is feeling <img className="feeling-icon" src={feeling.image} alt="" /> <span>{feeling.name}</span>
                                 </p>}
                                 <div onClick={() => setTogglePrivacy(!togglePrivacy)} className="time-text-display">
                                     <div className="selected-item-text" data-testid="box-item-text">
@@ -139,20 +148,39 @@ const AddPost = () => {
                             </ul>
                         </div>
                         <span className='char_count'>100/100</span>
-                        <div className="modal-box-selection" data-testid="modal-box-selection">
-                            <ul className="post-form-list" data-testid="list-item">
-                                <li className="post-form-list-item image-select">
-                                    <Input name="image" ref={fileInputRef} type="file" className="file-input" />
-                                    <img src={photo} alt="" /> Photo
-                                </li>
-                                <li className="post-form-list-item">
-                                    <img src={gif} alt="" /> Gif
-                                </li>
-                                <li className="post-form-list-item">
-                                    <img src={feeling} alt="" /> Feeling
-                                </li>
-                            </ul>
-                        </div>
+                        <>
+                            {toggleFeelings && (
+                                <div ref={feelingsRef}>
+                                    <Feelings />
+                                </div>
+                            )}
+                            <div className="modal-box-selection" data-testid="modal-box-selection">
+                                <ul className="post-form-list" data-testid="list-item">
+                                    <li className="post-form-list-item image-select"
+                                        onClick={fileInputClicked}>
+                                        <Input
+                                            ref={fileInputRef}
+                                            name="image"
+                                            type="file"
+                                            className="file-input"
+                                            onClick={() => {
+                                                if (fileInputRef.current) {
+                                                    fileInputRef.current.value = null
+                                                }
+                                            }}
+                                            handleChange={handleFileChange}
+                                        />
+                                        <img src={photo} alt="" /> Photo
+                                    </li>
+                                    <li className="post-form-list-item">
+                                        <img src={gif} alt="" /> Gif
+                                    </li>
+                                    <li className="post-form-list-item" onClick={() => setToggleFeelings(!toggleFeelings)}>
+                                        <img src={feelingImg} alt="" /> Feeling
+                                    </li>
+                                </ul>
+                            </div>
+                        </>
                         <div className="modal-box-button">
                             <Button label="Create Post" className="post-button" disabled={disable} />
                         </div>
