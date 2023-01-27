@@ -78,3 +78,11 @@ export function mapSettingsDropdownItems(setSettings) {
     setSettings(items)
     return items;
 }
+
+export function appImageUrl(version, id) {
+    if (typeof version === 'string' && typeof id === 'string') {
+        version = version.replace(/['"]+/g, '');
+        id = id.replace(/['"]+/g, '');
+    }
+    return `https://res.cloudinary.com/ruyisbaros/image/upload/v${version}/${id}`;
+}

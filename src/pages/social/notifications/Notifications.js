@@ -6,10 +6,18 @@ import "./notifications.scss"
 import { deleteUserNotifications, getUserNotifications } from '@services/api/notification.service'
 import { dispatchNotifications } from '@services/utils/util.service';
 import { markMessageAsRead, socketIONotification } from '@services/sockets/notification.socket.service'
+import NotificationPreview from '@components/dialog/NotificationPreview'
 
 const Notifications = () => {
     const { currentUser } = useSelector(store => store.currentUser)
     const [notifications, setNotifications] = useState([])
+    const [dialogContent, setDialogContent] = useState({
+        post: "",
+        imgUrl: "",
+        comment: "",
+        reaction: "",
+        senderName: ""
+    })
     const [loading, setLoading] = useState(true)
     const dispatch = useDispatch()
 
@@ -17,6 +25,7 @@ const Notifications = () => {
         const fetchUserNotifications = async () => {
             try {
                 const res = await getUserNotifications()
+                console.log(res.data);
                 setNotifications(res.data.notifications)
                 setLoading(false)
             } catch (error) {
@@ -32,9 +41,9 @@ const Notifications = () => {
         socketIONotification(currentUser, notifications, setNotifications, "notificationPage")
     }, [currentUser, notifications])
 
-    const markAsRead = async (id) => {
+    const markAsRead = async (notification) => {
         try {
-            await markMessageAsRead(id)
+            await markMessageAsRead(notification._id, notification, setDialogContent)
         } catch (error) {
             dispatchNotifications(error.response.data.message, "error", dispatch)
         }
@@ -51,47 +60,69 @@ const Notifications = () => {
     }
 
     return (
-        <div className="notifications-container">
-            <div className="notifications">Notifications</div>
-            {notifications.length > 0 && (
-                <div className="notifications-box">
-                    {notifications?.map((notification, index) => (
-                        <div className="notification-box" data-testid="notification-box" key={index}
-                            onClick={() => markAsRead(notification._id)}>
-                            <div className="notification-box-sub-card">
-                                <div className="notification-box-sub-card-media">
-                                    <div className="notification-box-sub-card-media-image-icon">
-                                        <Avatar name={notification?.userFrom?.username} bgColor={notification?.userFrom?.avatarColor}
-                                            textColor="#ffffff" size={40} avatarSrc={notification?.userFrom?.profilePicture} />
-                                    </div>
-                                    <div className="notification-box-sub-card-media-body">
-                                        <h6 className="title">
-                                            {notification?.message}
-                                            <small data-testid="subtitle" className="subtitle"
-                                                onClick={(e) => deleteNot(e, notification._id)}>
-                                                <FaRegTrashAlt className="trash" />
-                                            </small>
-                                        </h6>
-                                        <div className="subtitle-body">
-                                            <small className="subtitle">
-                                                {!notification?.read ?
-                                                    <FaCircle className="icon" /> :
-                                                    <FaRegCircle className="icon" />}
-                                            </small>
-                                            <p className="subtext">1 hr ago</p>
+        <>
+            {dialogContent?.senderName && (
+                <NotificationPreview
+                    title="My Post"
+                    post={dialogContent?.post}
+                    imgUrl={dialogContent?.imgUrl}
+                    comment={dialogContent?.comment}
+                    reaction={dialogContent?.reaction}
+                    senderName={dialogContent?.senderName}
+                    secondButtonText="Close"
+                    secondBtnHandler={() => {
+                        setDialogContent({
+                            post: "",
+                            imgUrl: "",
+                            comment: "",
+                            reaction: "",
+                            senderName: ""
+                        })
+                    }}
+                />
+            )}
+            <div className="notifications-container">
+                <div className="notifications">Notifications</div>
+                {notifications.length > 0 && (
+                    <div className="notifications-box">
+                        {notifications?.map((notification, index) => (
+                            <div className="notification-box" data-testid="notification-box" key={index}
+                                onClick={() => markAsRead(notification)}>
+                                <div className="notification-box-sub-card">
+                                    <div className="notification-box-sub-card-media">
+                                        <div className="notification-box-sub-card-media-image-icon">
+                                            <Avatar name={notification?.userFrom?.username} bgColor={notification?.userFrom?.avatarColor}
+                                                textColor="#ffffff" size={40} avatarSrc={notification?.userFrom?.profilePicture} />
+                                        </div>
+                                        <div className="notification-box-sub-card-media-body">
+                                            <h6 className="title">
+                                                {notification?.message}
+                                                <small data-testid="subtitle" className="subtitle"
+                                                    onClick={(e) => deleteNot(e, notification._id)}>
+                                                    <FaRegTrashAlt className="trash" />
+                                                </small>
+                                            </h6>
+                                            <div className="subtitle-body">
+                                                <small className="subtitle">
+                                                    {!notification?.read ?
+                                                        <FaCircle className="icon" /> :
+                                                        <FaRegCircle className="icon" />}
+                                                </small>
+                                                <p className="subtext">1 hr ago</p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    ))}
-                </div>
-            )}
-            {loading && !notifications.length && <div className="notifications-box"></div>}
-            {!loading && !notifications.length && <h3 className="empty-page" data-testid="empty-page">
-                You have no notification
-            </h3>}
-        </div>
+                        ))}
+                    </div>
+                )}
+                {loading && !notifications.length && <div className="notifications-box"></div>}
+                {!loading && !notifications.length && <h3 className="empty-page" data-testid="empty-page">
+                    You have no notification
+                </h3>}
+            </div>
+        </>
     )
 }
 
