@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
     type: "",
     isOpen: false,
-    feeling: "",
+    feelings: "",
     image: "",
     data: null,
     feelingsIsOpen: false,
@@ -28,7 +28,7 @@ const modalSlice = createSlice({
         closeModal: (state) => {
             state.type = ""
             state.isOpen = false
-            state.feeling = ""
+            state.feelings = ""
             state.image = ""
             state.data = null
             state.feelingsIsOpen = false
@@ -41,7 +41,7 @@ const modalSlice = createSlice({
         },
         addPostFeeling: (state, action) => {
             const { feeling } = action.payload
-            state.feeling = feeling
+            state.feelings = feeling
         },
         toggleImageModal: (state, action) => {
             state.openFileDialog = action.payload;

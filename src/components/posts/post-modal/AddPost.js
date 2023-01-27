@@ -1,23 +1,59 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useCallback, useEffect } from 'react'
 import PostWrapper from '../post-wrapper/PostWrapper'
 import { useSelector } from 'react-redux';
 import photo from "@assets/images/photo.png"
 import gif from "@assets/images/gif.png"
 import feeling from "@assets/images/feeling.png"
-
 import Avatar from '@components/avatar/Avatar';
-import { FaTimes } from 'react-icons/fa';
-import { bgColors } from '@services/utils/static.data';
+import { FaGlobe, FaTimes } from 'react-icons/fa';
+import { bgColors, privacyList } from '@services/utils/static.data';
 import Input from '@components/inputs/Input';
 import "./addPost.scss"
 import Button from '@components/buttons/Button';
+import { selectPostBackground } from '@services/utils/postutils.service';
+import SelectDropdown from '@components/select-dropdown/SelectDropdown';
+import useDetectOutsideClick from './../../../hooks/useDetectOutsideClick';
+import { find } from 'lodash';
 
 const AddPost = () => {
-    const { gifModalIsOpen } = useSelector(store => store.modal)
+    const { gifModalIsOpen, feelings } = useSelector(store => store.modal)
     const { currentUser } = useSelector(store => store.currentUser)
-    const [loading, setLoading] = useState(false)
-    const [postImage, setPostImage] = useState("")
+    const { privacy } = useSelector(store => store.post)
+    const [loading] = useState(false)
+    const [postImage] = useState("")
+    const [textAreaBackground, setTextAreaBackground] = useState("#ffffff")
+    const [disable, setDisable] = useState(false)
+    const [selectedItem, setSelectedItem] = useState({
+        topText: "Public",
+        subText: "Anyone on page",
+        icon: <FaGlobe className='globe-icon globe' />
+    })
+    const [postData, setPostData] = useState({
+        post: "",
+        bgColor: textAreaBackground,
+        privacy: privacy,
+        feelings: "",
+        gifUrl: "",
+        profilePicture: currentUser?.profilePicture,
+        image: ""
+    })
     const fileInputRef = useRef()
+    const privacyRef = useRef(null)
+    const [togglePrivacy, setTogglePrivacy] = useDetectOutsideClick(privacyRef, false)
+
+    const selectBackground = (bgColor) => {
+        selectPostBackground(bgColor, postData, setTextAreaBackground, setPostData, setDisable)
+    }
+
+    const displayPostPrivacy = useCallback(() => {
+        if (privacy) {
+            const postPrivacy = find(privacyList, (item) => item.topText === privacy)
+            setSelectedItem(postPrivacy)
+        }
+    }, [privacy])
+
+    useEffect(() => { displayPostPrivacy() }, [displayPostPrivacy])
+
     return (
         <>
             <PostWrapper>
@@ -43,26 +79,29 @@ const AddPost = () => {
                                 <h5 className="inline-title-display" data-testid="box-username">
                                     {currentUser?.username}
                                 </h5>
-                                <p className="inline-display" data-testid="box-feeling">
-                                    is feeling <img className="feeling-icon" src="" alt="" /> <span>Happy</span>
-                                </p>
-                                <div data-testid="box-text-display" className="time-text-display">
+                                {feelings.name && <p className="inline-display" data-testid="box-feeling">
+                                    is feeling <img className="feeling-icon" src={feelings.image} alt="" /> <span>{feelings.name}</span>
+                                </p>}
+                                <div onClick={() => setTogglePrivacy(!togglePrivacy)} className="time-text-display">
                                     <div className="selected-item-text" data-testid="box-item-text">
-                                        Feeling
+                                        {selectedItem.topText}
                                     </div>
-                                    <div>
-
+                                    <div ref={privacyRef}>
+                                        <SelectDropdown isActive={togglePrivacy} items={privacyList} setSelectedItem={setSelectedItem} />
                                     </div>
                                 </div>
                             </div>
                         </div>
                         {
                             !postImage && (
-                                <div className="modal-box-form">
-                                    <div className='main'>
+                                <div className="modal-box-form"
+                                    style={{ background: `${textAreaBackground}` }}>
+                                    <div className='main'
+                                        style={{ margin: textAreaBackground !== "#ffffff" ? "0 auto" : "" }}
+                                    >
                                         <div className='flex-row'>
                                             <div
-                                                className='editable flex-item'
+                                                className={`editable flex-item ${textAreaBackground !== "#ffffff" ? "textInputColor" : ""}`}
                                                 name="post"
                                                 contentEditable={true}
                                                 data-placeholder="Edit your post content..."
@@ -94,6 +133,7 @@ const AddPost = () => {
                                         key={index}
                                         className={`${color === "#ffffff" ? "whiteColorBorder" : ""}`}
                                         style={{ backgroundColor: `${color}`, cursor: "pointer" }}
+                                        onClick={() => selectBackground(color)}
                                     ></li>
                                 ))}
                             </ul>
@@ -114,7 +154,7 @@ const AddPost = () => {
                             </ul>
                         </div>
                         <div className="modal-box-button">
-                            <Button label="Create Post" className="post-button" disabled={false} />
+                            <Button label="Create Post" className="post-button" disabled={disable} />
                         </div>
                     </div>
                 )}
