@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react'
 import { BrowserRouter } from "react-router-dom"
+import { useSelector } from 'react-redux'
 import { Routers } from './routes'
-import { useDispatch } from 'react-redux'
+import { socketService } from '@services/sockets/socket.service'
 import "./App.scss"
-import { userLoggedSuccess } from '@redux/currentUserSlicer'
-import { currentUser } from '@services/api/user.service'
+import Toast from '@components/toast/Toast'
+
 const App = () => {
 
   /* const dispatch = useDispatch()
@@ -18,10 +19,21 @@ const App = () => {
     syncCurrentUser()
   }, [dispatch])
  */
+  const { notifications } = useSelector(store => store)
+
+  useEffect(() => {
+    socketService.setupSocketConnection()
+  }, [])
+
   return (
-    <BrowserRouter>
-      <Routers />
-    </BrowserRouter>
+    <>
+      {notifications && notifications.length > 0 && (
+        <Toast position="top-right" toastList={notifications} autoDelete={true} />
+      )}
+      <BrowserRouter>
+        <Routers />
+      </BrowserRouter>
+    </>
   )
 }
 

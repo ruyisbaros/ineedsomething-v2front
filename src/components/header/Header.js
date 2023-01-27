@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import logo from '@assets/images/needsmtg.jpg';
 import { FaCaretDown, FaCaretUp, FaRegBell, FaRegEnvelope } from 'react-icons/fa';
-import { appEnvironment, clearCurrentUser, mapSettingsDropdownItems } from '@services/utils/util.service';
+import { appEnvironment, clearCurrentUser, dispatchNotifications, mapSettingsDropdownItems } from '@services/utils/util.service';
 import Avatar from '@components/avatar/Avatar';
 import '@components/header/header.scss';
 import { useSelector, useDispatch } from 'react-redux';
@@ -14,12 +14,24 @@ import useLocalStorage from '@hooks/useLocalStorage';
 import useSessionStorage from '@hooks/useSessionStorage';
 import { authService } from '@services/api/auth.service';
 import HeaderSkeleton from './HeaderSkeleton';
+import { deleteUserNotifications, getUserNotifications } from '@services/api/notification.service';
+import { mapDropdownNotifications, markMessageAsRead, socketIONotification } from '@services/sockets/notification.socket.service';
+import NotificationPreview from '@components/dialog/NotificationPreview';
+import { socketService } from '@services/sockets/socket.service';
 
 const Header = () => {
     const { currentUser } = useSelector(store => store.currentUser)
-    //console.log(currentUser._doc.profilePicture)
+    const [notifications, setNotifications] = useState([])
+    const [notificationsCount, setNotificationsCount] = useState(0)
     const [environment, setEnvironment] = useState("")
     const [settings, setSettings] = useState([])
+    const [dialogContent, setDialogContent] = useState({
+        post: "",
+        imgUrl: "",
+        comment: "",
+        reaction: "",
+        senderName: ""
+    })
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const messageRef = useRef(null)
@@ -29,6 +41,7 @@ const Header = () => {
     const [isNotificationActive, setIsNotificationActive] = useDetectOutsideClick(notificationRef, false)
     const [isSettingsActive, setIsSettingsActive] = useDetectOutsideClick(settingsRef, false)
     const [deleteStoreUsername] = useLocalStorage("username", "delete")
+    const getStoreUsername = useLocalStorage("username", "get")
     const [setLoggedMeIn] = useLocalStorage("keepLoggedIn", "set")
     const [deleteStoragePageReload] = useSessionStorage("pageReload", "delete")
 
@@ -47,20 +60,57 @@ const Header = () => {
 
     }
 
-    const onMarkAsRead = () => { }
-    const onDeleteNotification = () => { }
     const onLogout = async () => {
         try {
             clearCurrentUser({ dispatch, deleteStoreUsername, deleteStoragePageReload, setLoggedMeIn })
             await authService.logout()
             navigate("/")
         } catch (error) {
-            console.log(error)
+            dispatchNotifications(error.response.data.message, "error", dispatch)
         }
     }
     const onNavigate = () => {
         navigateOnProfiles(currentUser, navigate)
     }
+
+    useEffect(() => {
+        const fetchUserNotifications = async () => {
+            try {
+                const res = await getUserNotifications()
+                console.log(res.data);
+                const mappedNotifications = mapDropdownNotifications(res.data.notifications, setNotificationsCount)
+                setNotifications(mappedNotifications)
+                socketService.socket.emit("setup", { userId: getStoreUsername })
+            } catch (error) {
+
+                dispatchNotifications(error.response.data.message, "error", dispatch)
+            }
+        }
+
+        fetchUserNotifications()
+    }, [dispatch])
+
+    const onMarkAsRead = async (notification) => {
+        try {
+            await markMessageAsRead(notification._id, notification, setDialogContent)
+        } catch (error) {
+            dispatchNotifications(error.response.data.message, "error", dispatch)
+        }
+    }
+
+    const onDeleteNotification = async (e, id) => {
+        e.stopPropagation()
+        try {
+            const res = await deleteUserNotifications(id)
+            dispatchNotifications(res.data.message, "success", dispatch)
+        } catch (error) {
+            dispatchNotifications(error.response.data.message, "error", dispatch)
+        }
+    }
+
+    useEffect(() => {
+        socketIONotification(currentUser, notifications, setNotifications, "header", setNotificationsCount)
+    }, [currentUser, notifications])
 
     return (
         <>
@@ -77,6 +127,26 @@ const Header = () => {
                                 </div>
                             )
                         }
+                        {dialogContent?.senderName && (
+                            <NotificationPreview
+                                title="My Post"
+                                post={dialogContent?.post}
+                                imgUrl={dialogContent?.imgUrl}
+                                comment={dialogContent?.comment}
+                                reaction={dialogContent?.reaction}
+                                senderName={dialogContent?.senderName}
+                                secondButtonText="Close"
+                                secondBtnHandler={() => {
+                                    setDialogContent({
+                                        post: "",
+                                        imgUrl: "",
+                                        comment: "",
+                                        reaction: "",
+                                        senderName: ""
+                                    })
+                                }}
+                            />
+                        )}
                         <div className="header-navbar">
                             <div className="header-image" data-testid="header-image" onClick={() => navigate("/app/social/streams")}>
                                 <img src={logo} className="img-fluid" alt="" />
@@ -101,9 +171,9 @@ const Header = () => {
                                     }}>
                                     <span className="header-list-name">
                                         <FaRegBell className="header-list-icon" />
-                                        <span className="bg-danger-dots dots" data-testid="notification-dots">
+                                        {notificationsCount > 0 && <span className="bg-danger-dots dots" data-testid="notification-dots">
 
-                                        </span>
+                                        </span>}
                                     </span>
                                     {isNotificationActive &&
                                         (
@@ -112,8 +182,8 @@ const Header = () => {
                                                     <Dropdown
                                                         height={300}
                                                         style={{ right: "250px", top: "20px" }}
-                                                        data={[]}
-                                                        notificationCount={0}
+                                                    data={notifications}
+                                                    notificationCount={notificationsCount}
                                                         title="Notifications"
                                                         onMarkAsRead={onMarkAsRead}
                                                         onDeleteNotification={onDeleteNotification}

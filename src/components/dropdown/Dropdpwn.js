@@ -66,7 +66,7 @@ const Dropdown = ({
                                     </div>
                                     {title === 'Notifications' && (
                                         <div className="content-icons">
-                                            <FaTrashAlt className="trash" onClick={() => onDeleteNotification(item?._id)} />
+                                            <FaTrashAlt className="trash" onClick={(e) => onDeleteNotification(e, item?._id)} />
                                             {item?.read ? <FaRegCircle className="circle" /> : <FaCircle className="circle" />}
                                         </div>
                                     )}

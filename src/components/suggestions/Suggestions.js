@@ -13,7 +13,7 @@ const Suggestions = () => {
     useEffect(() => {
         setUsers(suggestUsers)
     }, [suggestUsers])
-    console.log(users);
+    //console.log(users);
     return (
 
         <div className="suggestions-list-container" data-testid="suggestions-container">
