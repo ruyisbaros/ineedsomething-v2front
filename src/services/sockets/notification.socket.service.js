@@ -53,7 +53,7 @@ export function mapDropdownNotifications(notificationData, setNotificationsCount
         const item = {
             _id: notification?._id,
             topText: notification?.topText ? notification?.topText : notification?.message,
-            subText: moment(notification?.createdAt).format("MMMM Do YYYY"),
+            subText: moment(notification?.createdAt).fromNow(),
             createdAt: notification?.createdAt,
             username: notification?.userFrom ? notification?.userFrom.username : notification?.username,
             avatarColor: notification?.userFrom ? notification?.userFrom.avatarColor : notification?.avatarColor,
@@ -73,7 +73,7 @@ export function mapDropdownNotifications(notificationData, setNotificationsCount
         items.push(item);
     }
 
-    const count = sumBy(items, (not) => not.read ? 1 : 0)
+    const count = sumBy(items, (not) => !not.read ? 1 : 0)
     setNotificationsCount(count)
     return items
 }

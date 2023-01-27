@@ -6,6 +6,7 @@ import { Suspense, lazy } from "react"
 import Auth from "@pages/auth/Auth";
 import ForgotPassword from "@pages/auth/ForgotPassword";
 import ResetPassword from "@pages/auth/ResetPassword";
+import NotificationSkeleton from "@pages/social/notifications/NotificationSkeleton"
 
 const Social = lazy(() => import("@pages/social/Social"))
 const Chat = lazy(() => import("@pages/social/chat/Chat"))
@@ -91,7 +92,7 @@ export const Routers = () => {
                 {
                     path: "notifications",
                     element: (
-                        <Suspense>
+                        <Suspense fallback={<NotificationSkeleton />}>
                             <Notifications />
                         </Suspense>
                     )
