@@ -8,7 +8,7 @@ import { addPostFeeling, toggleFeelingModal } from '@redux/postModalSlicer';
 const Feelings = () => {
     const { feelingsIsOpen } = useSelector(store => store.modal)
     const dispatch = useDispatch()
-
+    //Edit feelings
     const selectFeeling = (feeling) => {
         dispatch(addPostFeeling({ feeling }))
         dispatch(toggleFeelingModal(!feelingsIsOpen))

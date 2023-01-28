@@ -30,26 +30,24 @@ const postSlicer = createSlice({
                 state[key] = value
             }
         },
-        clearPost: () => {
-            return {
-                _id: '',
-                post: '',
-                bgColor: '',
-                privacy: '',
-                feelings: '',
-                gifUrl: '',
-                profilePicture: '',
-                image: '',
-                userId: '',
-                username: '',
-                email: '',
-                avatarColor: '',
-                commentsCount: '',
-                reactions: [],
-                imgVersion: '',
-                imgId: '',
-                createdAt: ''
-            }
+        clearPost: (state) => {
+            state._id = ''
+            state.post = ''
+            state.bgColor = ''
+            state.privacy = ''
+            state.feelings = ''
+            state.gifUrl = ''
+            state.profilePicture = ''
+            state.image = ''
+            state.userId = ''
+            state.username = ''
+            state.email = ''
+            state.avatarColor = ''
+            state.commentsCount = ''
+            state.reactions = []
+            state.imgVersion = ''
+            state.imgId = ''
+            state.createdAt = ''
         }
     },
 });
