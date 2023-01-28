@@ -9,23 +9,28 @@ import { FaArrowLeft, FaGlobe, FaTimes } from 'react-icons/fa';
 import { bgColors, privacyList } from '@services/utils/static.data';
 import Input from '@components/inputs/Input';
 import Button from '@components/buttons/Button';
-import { handlePostText, selectPostBackground } from '@services/utils/postutils.service';
+import { closePostCreateModal, handlePostText, selectPostBackground, sendPostWithImage } from '@services/utils/postutils.service';
 import SelectDropdown from '@components/select-dropdown/SelectDropdown';
 import useDetectOutsideClick from '@hooks/useDetectOutsideClick';
 import { find } from 'lodash';
 import Feelings from '@components/feelings/Feelings';
-import { validateImageFile } from '@services/utils/image.utils.service';
+import { readImageAsBase64, validateImageFile } from '@services/utils/image.utils.service';
 import "./addPost.scss"
 import { clearPost, updatePostItem } from '@redux/postSlicer';
 import { closeModal, toggleGifModal } from '@redux/postModalSlicer';
 import Giphy from '@components/giphy/Giphy';
+import { toast } from 'react-toastify';
+import { createPostNoImage } from '@services/api/post.service';
+import Spinner from '@components/spinner/Spinner';
 
 const AddPost = () => {
     const { gifModalIsOpen, feeling, feelingsIsOpen } = useSelector(store => store.modal)
     const { currentUser } = useSelector(store => store.currentUser)
     const { privacy, post, gifUrl, image } = useSelector(store => store.post)
     const dispatch = useDispatch();
-    const [loading] = useState(false)
+    const [loading, setLoading] = useState(false)
+    const [apiResponse, setApiResponse] = useState("")
+    //Just for frontend review
     const [postImage, setPostImage] = useState("")
     const [textAreaBackground, setTextAreaBackground] = useState("#ffffff")
     const [disable, setDisable] = useState(false)
@@ -38,7 +43,7 @@ const AddPost = () => {
     const [postData, setPostData] = useState({
         post: "",
         bgColor: textAreaBackground,
-        privacy: privacy,
+        privacy: "",
         feelings: "",
         gifUrl: "",
         profilePicture: currentUser?.profilePicture,
@@ -144,6 +149,29 @@ const AddPost = () => {
             imgVersion: ""
         }))
     }
+    console.log(postData)
+    //CreatePost
+    const createPost = async () => {
+        setLoading(true)
+        if (Object.keys(feeling).length) {
+            postData.feelings = feeling?.name
+        }
+        postData.privacy = privacy || "Public"
+        postData.gifUrl = gifUrl
+        if (selectedPostImage) {
+            let result = await readImageAsBase64(selectedPostImage)
+
+            await sendPostWithImage(result, postData, inputImgRef, setApiResponse, setLoading, dispatch)
+
+        } else {
+            const res = await createPostNoImage(postData)
+            if (res) {
+                setLoading(false)
+                toast.success("Post has been created successfully")
+                closePostCreateModal(dispatch)
+            }
+        }
+    }
 
     return (
         <>
@@ -155,6 +183,7 @@ const AddPost = () => {
                         {loading && (
                             <div className='modal-box-loading'>
                                 <span>Posting...</span>
+                                <Spinner />
                             </div>)}
                         <div className='modal-box-header'>
                             <h2>Create Post</h2>
@@ -279,7 +308,7 @@ const AddPost = () => {
                             </div>
                         </>
                         <div className="modal-box-button">
-                            <Button label="Create Post" className="post-button" disabled={disable} />
+                            <Button handleClick={createPost} label="Create Post" className="post-button" disabled={disable} />
                         </div>
                     </div>
                 )}

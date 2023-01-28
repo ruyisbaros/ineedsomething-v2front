@@ -15,7 +15,7 @@ export function validateImageFile(file) {
     }
 }
 
-export function readImageAsBase64(file) {
+export async function readImageAsBase64(file) {
     const reader = new FileReader();
     const fileValue = new Promise((resolve, reject) => {
         reader.addEventListener('load', () => {
