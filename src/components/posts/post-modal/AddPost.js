@@ -5,7 +5,7 @@ import photo from "@assets/images/photo.png"
 import gif from "@assets/images/gif.png"
 import feelingImg from "@assets/images/feeling.png"
 import Avatar from '@components/avatar/Avatar';
-import { FaGlobe, FaTimes } from 'react-icons/fa';
+import { FaArrowLeft, FaGlobe, FaTimes } from 'react-icons/fa';
 import { bgColors, privacyList } from '@services/utils/static.data';
 import Input from '@components/inputs/Input';
 import Button from '@components/buttons/Button';
@@ -17,7 +17,8 @@ import Feelings from '@components/feelings/Feelings';
 import { validateImageFile } from '@services/utils/image.utils.service';
 import "./addPost.scss"
 import { clearPost, updatePostItem } from '@redux/postSlicer';
-import { closeModal } from '@redux/postModalSlicer';
+import { closeModal, toggleGifModal } from '@redux/postModalSlicer';
+import Giphy from '@components/giphy/Giphy';
 
 const AddPost = () => {
     const { gifModalIsOpen, feeling, feelingsIsOpen } = useSelector(store => store.modal)
@@ -268,7 +269,7 @@ const AddPost = () => {
                                         />
                                         <img src={photo} alt="" /> Photo
                                     </li>
-                                    <li className="post-form-list-item">
+                                    <li onClick={() => dispatch(toggleGifModal(!gifModalIsOpen))} className="post-form-list-item">
                                         <img src={gif} alt="" /> Gif
                                     </li>
                                     <li className="post-form-list-item" onClick={() => setToggleFeelings(!toggleFeelings)}>
@@ -283,7 +284,19 @@ const AddPost = () => {
                     </div>
                 )}
                 {gifModalIsOpen && (
-                    <div>GIF</div>
+                    <div className='modal-giphy'>
+                        <div className='modal-giphy-header'>
+                            <Button
+                                label={<FaArrowLeft />}
+                                className="back-button"
+                                disabled={false}
+                                handleClick={() => dispatch(toggleGifModal(!gifModalIsOpen))}
+                            />
+                            <h3>Choose a GIF</h3>
+                        </div>
+                        <hr />
+                        <Giphy />
+                    </div>
                 )}
             </PostWrapper>
         </>

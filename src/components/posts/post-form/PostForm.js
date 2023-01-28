@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import photo from "@assets/images/photo.png"
 import gif from "@assets/images/gif.png"
 import feeling from "@assets/images/feeling.png"
-import { openModal } from '@redux/postModalSlicer'
+import { openModal, toggleFeelingModal, toggleGifModal, toggleImageModal } from '@redux/postModalSlicer'
 import AddPost from '../post-modal/AddPost'
 import '@components/posts/post-form/postForm.scss';
 
@@ -26,9 +26,9 @@ const PostForm = () => {
                     <div className="post-form-header">
                         <h4 className="post-form-title">Create Post</h4>
                     </div>
-                    <div className="post-form-body">
+                    <div className="post-form-body" onClick={() => openPostModal()}>
                         <div className="post-form-input-body" data-testid="input-body"
-                            onClick={() => openPostModal()}>
+                        >
                             <Avatar name={currentUser?.username} bgColor={currentUser?.avatarColor} textColor="#ffffff" size={50}
                                 avatarSrc={currentUser?.profilePicture} />
                             <div className="post-form-input" data-placeholder="Write something here..."></div>
