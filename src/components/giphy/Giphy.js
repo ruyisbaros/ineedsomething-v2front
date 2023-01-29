@@ -7,6 +7,7 @@ import { toggleGifModal } from '@redux/postModalSlicer';
 import '@components/giphy/giphy.scss';
 import { Input } from '@components/index';
 import Spinner from '@components/spinner/Spinner';
+import { positionCursor } from '@services/utils/postutils.service';
 
 const Giphy = () => {
     const { gifModalIsOpen } = useSelector(store => store.modal)
@@ -43,7 +44,10 @@ const Giphy = () => {
                     <ul className="giphy-container-picker-list" data-testid="unorderedList">
                         {gifs.map((gif, index) => (
                             <li
-                                onClick={() => selectGif(gif.images.original.url)}
+                                onClick={() => {
+                                    selectGif(gif.images.original.url)
+                                    positionCursor("editable")
+                                }}
                                 className="giphy-container-picker-list-item"
                                 data-testid="list-item"
                                 key={index}

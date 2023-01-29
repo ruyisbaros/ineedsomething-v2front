@@ -50,3 +50,14 @@ export function checkPostPrivacy(post, profile, following) {
 
     return isPrivate || isPublic || isFollower
 }
+
+export function positionCursor(elementId) {
+    const element = document.getElementById(`${elementId}`)
+    const selection = window.getSelection()
+    const range = document.createRange()
+    selection.removeAllRanges()
+    range.selectNodeContents(element)
+    range.collapse(false)
+    selection.addRange(range)
+    element.focus()
+}

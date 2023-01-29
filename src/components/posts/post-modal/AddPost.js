@@ -9,7 +9,7 @@ import { FaArrowLeft, FaGlobe, FaTimes } from 'react-icons/fa';
 import { bgColors, privacyList } from '@services/utils/static.data';
 import Input from '@components/inputs/Input';
 import Button from '@components/buttons/Button';
-import { closePostCreateModal, handlePostText, selectPostBackground, sendPostWithImage } from '@services/utils/postutils.service';
+import { closePostCreateModal, handlePostText, positionCursor, selectPostBackground, sendPostWithImage } from '@services/utils/postutils.service';
 import SelectDropdown from '@components/select-dropdown/SelectDropdown';
 import useDetectOutsideClick from '@hooks/useDetectOutsideClick';
 import { find } from 'lodash';
@@ -75,6 +75,11 @@ const AddPost = () => {
             e.preventDefault()
         }
     }
+
+    //handle post text cursor
+    useEffect(() => {
+        positionCursor("editable")
+    }, [])
     //Edit background
     const selectBackground = (bgColor) => {
         selectPostBackground(bgColor, postData, setTextAreaBackground, setPostData)
@@ -107,6 +112,7 @@ const AddPost = () => {
                     postData.post = post
                 }
                 setPostData(postData)
+                positionCursor("editable")
             }
         }, 500)
         dispatch(updatePostItem({
@@ -141,6 +147,7 @@ const AddPost = () => {
                 }
                 setPostData(postData)
             }
+            positionCursor("editable")
         }, 500)
 
         dispatch(updatePostItem({
@@ -230,8 +237,9 @@ const AddPost = () => {
                                                     inputRef.current = el
                                                     inputRef?.current?.focus()
                                                 }}
-                                                className={`editable flex-item ${textAreaBackground !== "#ffffff" ? "textInputColor" : ""}`}
+                                                className={`editable flex-item ${textAreaBackground !== "#ffffff" ? "textInputColor" : ""} ${postData.post.length === 0 && textAreaBackground !== "#ffffff" && "defaultInputTextColor"}`}
                                                 name="post"
+                                                id='editable'
                                                 onKeyDown={preventTextLength}
                                                 onInput={(e) => postText(e, e.currentTarget.textContent)}
                                                 contentEditable={true}
@@ -252,6 +260,7 @@ const AddPost = () => {
                                         }}
                                         className='post-input flex-item'
                                         name="post"
+                                        id='editable'
                                         onKeyDown={preventTextLength}
                                         onInput={(e) => postText(e, e.currentTarget.textContent)}
                                         contentEditable={true}
@@ -273,7 +282,10 @@ const AddPost = () => {
                                         key={index}
                                         className={`${color === "#ffffff" ? "whiteColorBorder" : ""}`}
                                         style={{ backgroundColor: `${color}`, cursor: "pointer" }}
-                                        onClick={() => selectBackground(color)}
+                                        onClick={() => {
+                                            selectBackground(color)
+                                            positionCursor("editable")
+                                        }}
                                     ></li>
                                 ))}
                             </ul>
