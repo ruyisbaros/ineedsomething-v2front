@@ -4,6 +4,7 @@ import currentUserSlicer from "./currentUserSlicer";
 import notificationSlicer from "./notificationSlicer";
 import postModalSlicer from "./postModalSlicer";
 import postSlicer from "./postSlicer";
+import postStream from "./postStream";
 import suggestionsSlice from "./suggestionsSlicer";
 import usersSlicer from "./usersSlicer";
 
@@ -14,6 +15,7 @@ export const store = configureStore({
         suggestions: suggestionsSlice,
         notifications: notificationSlicer,
         modal: postModalSlicer,
-        post: postSlicer
+        post: postSlicer,
+        allPosts: postStream
     },
 });

@@ -1,22 +1,21 @@
-import { useEffect, useCallback } from "react";
+import { useCallback, useEffect } from 'react';
 
-const useInfiniteScroll = (bodyRef, bottomLineRef, callBack) => {
+const useInfiniteScroll = (bodyRef, bottomLineRef, callback) => {
     const handleScroll = useCallback(() => {
-        const containerHeight = bodyRef?.current?.getBoundingClientRect().height
-        const { top: bottomLineTop } = bottomLineRef?.current?.getBoundingClientRect()
+        const containerHeight = bodyRef?.current?.getBoundingClientRect().height;
+        const { top: bottomLineTop } = bottomLineRef?.current?.getBoundingClientRect();
         if (bottomLineTop <= containerHeight) {
-            callBack()
+            setTimeout(() => {
+                callback()
+            }, 200)
         }
-    }, [bodyRef, bottomLineRef, callBack])
+    }, [bodyRef, bottomLineRef, callback]);
 
     useEffect(() => {
         const bodyRefCurrent = bodyRef?.current;
-        bodyRefCurrent?.addEventListener("scroll", handleScroll, true)
+        bodyRefCurrent?.addEventListener('scroll', handleScroll, true);
+        return () => bodyRefCurrent.removeEventListener('scroll', handleScroll, true);
+    }, [bodyRef, handleScroll]);
+};
 
-        return () => {
-            bodyRefCurrent?.removeEventListener("scroll", handleScroll, true)
-        }
-    }, [bodyRef, handleScroll])
-}
-
-export default useInfiniteScroll
+export default useInfiniteScroll;

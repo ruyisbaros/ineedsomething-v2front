@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useRef, useState } from 'react'
+import React, { useEffect, useCallback, useState } from 'react'
 import { cloneDeep } from "lodash"
 import { useDispatch } from 'react-redux'
 import "@components/toast/toast.scss"
