@@ -2,13 +2,13 @@ import { createPostWithImage } from "@services/api/post.service"
 import { toast } from "react-toastify"
 import { closeModal } from '@redux/postModalSlicer';
 import { clearPost } from '@redux/postSlicer';
+import { checkIfUserIsFollowed } from "./util.service";
 
 
-export function selectPostBackground(bgColor, postData, setTextAreaBackground, setPostData, setDisable) {
+export function selectPostBackground(bgColor, postData, setTextAreaBackground, setPostData) {
     postData.bgColor = bgColor
     setTextAreaBackground(bgColor)
     setPostData(postData)
-    setDisable(false)
 }
 
 export function closePostCreateModal(dispatch) {
@@ -16,10 +16,9 @@ export function closePostCreateModal(dispatch) {
     dispatch(clearPost());
 }
 
-export function handlePostText(text, postData, setPostData, setDisable) {
+export function handlePostText(text, postData, setPostData) {
     postData.post = text
     setPostData(postData)
-    setDisable(false)
 }
 
 export async function sendPostWithImage(fileResult, postData, inputImgRef, setApiResponse, setLoading, dispatch) {
@@ -42,4 +41,12 @@ export async function sendPostWithImage(fileResult, postData, inputImgRef, setAp
         setLoading(false)
         toast.error(error.response.data.message);
     }
+}
+
+export function checkPostPrivacy(post, profile, following) {
+    const isPrivate = post.privacy === "Private" && post.userId === profile?._id
+    const isPublic = post.privacy === "Public"
+    const isFollower = post.privacy === "Followers" && checkIfUserIsFollowed(following, post?.userId, profile?._id)
+
+    return isPrivate || isPublic || isFollower
 }

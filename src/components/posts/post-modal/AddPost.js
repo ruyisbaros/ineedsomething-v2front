@@ -33,7 +33,7 @@ const AddPost = () => {
     //Just for frontend review
     const [postImage, setPostImage] = useState("")
     const [textAreaBackground, setTextAreaBackground] = useState("#ffffff")
-    const [disable, setDisable] = useState(false)
+    const [disable, setDisable] = useState(true)
     const [selectedPostImage, setSelectedPostImage] = useState(null)
     const [selectedItem, setSelectedItem] = useState({
         topText: "Public",
@@ -67,7 +67,8 @@ const AddPost = () => {
         const textLength = e.target.textContent.length
         const counter = 150 - textLength
         counterRef.current.textContent = `${counter}/150`
-        handlePostText(textContent, postData, setPostData, setDisable)
+        setDisable(textLength <= 0 && !postImage)
+        handlePostText(textContent, postData, setPostData)
     }
     const preventTextLength = (e) => {
         if (e.target.textContent.length === 150 && e.keyCode !== 8) {
@@ -76,7 +77,7 @@ const AddPost = () => {
     }
     //Edit background
     const selectBackground = (bgColor) => {
-        selectPostBackground(bgColor, postData, setTextAreaBackground, setPostData, setDisable)
+        selectPostBackground(bgColor, postData, setTextAreaBackground, setPostData)
     }
 
     //Edit privacy
@@ -150,6 +151,10 @@ const AddPost = () => {
         }))
     }
     console.log(postData)
+
+    useEffect(() => {
+        setDisable(postData.post.length <= 0 && !postImage)
+    }, [postData.post.length, postImage])
     //CreatePost
     const createPost = async () => {
         setLoading(true)
