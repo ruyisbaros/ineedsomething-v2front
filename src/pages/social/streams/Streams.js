@@ -10,6 +10,7 @@ import { toast } from 'react-toastify';
 import { orderBy, uniqBy } from 'lodash';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import { getPosts } from '@services/api/post.service';
+import { socketIOPost } from '@services/utils/postutils.service'
 
 const Streams = () => {
     const { allPosts } = useSelector(store => store)
@@ -69,6 +70,12 @@ const Streams = () => {
     useEffect(() => {
         dispatch(getUserSuggestions())
     }, [dispatch])
+
+    //Post socket useEffect
+
+    useEffect(() => {
+        socketIOPost(posts, setPosts)
+    }, [posts])
 
     return (
         <div className="streams">
