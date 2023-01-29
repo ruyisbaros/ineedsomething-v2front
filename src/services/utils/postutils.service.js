@@ -3,6 +3,8 @@ import { toast } from "react-toastify"
 import { closeModal } from '@redux/postModalSlicer';
 import { clearPost } from '@redux/postSlicer';
 import { checkIfUserIsFollowed } from "./util.service";
+import { cloneDeep, findIndex, remove, find } from 'lodash';
+import { socketService } from "@services/sockets/socket.service";
 
 
 export function selectPostBackground(bgColor, postData, setTextAreaBackground, setPostData) {
@@ -60,4 +62,54 @@ export function positionCursor(elementId) {
     range.collapse(false)
     selection.addRange(range)
     element.focus()
+}
+
+export function socketIOPost(posts, setPosts) {
+    posts = cloneDeep(posts)
+    socketService?.socket?.on("add post", (createdPost) => {
+        posts = [createdPost, ...posts]
+        setPosts(posts)
+    })
+
+    socketService?.socket?.on("update post", (updatedPost) => {
+        updatePost(posts, updatedPost, setPosts)
+    })
+
+    socketService?.socket?.on("delete post", (postId) => {
+        deletePost(posts, postId, setPosts)
+    })
+
+    socketService?.socket?.on("update like", (reaction) => {
+        const postData = find(posts, (data) => data._id === reaction.postId)
+        if (postData) {
+            postData.reactions = reaction.postReactions
+            updatePost(posts, postData, setPosts)
+        }
+    })
+
+    socketService?.socket?.on("update comment", (comment) => {
+        const postData = find(posts, (data) => data._id === comment.postId)
+        if (postData) {
+            postData.commentsCount = comment.commentsCount
+            updatePost(posts, postData, setPosts)
+        }
+    })
+}
+
+export function updatePost(posts, post, setPosts) {
+    posts = cloneDeep(posts)
+    const index = findIndex(posts, (data) => data._id === post._id)
+    if (index > -1) {
+        posts.splice(index, 1, post)
+        setPosts(posts)
+    }
+}
+
+export function deletePost(posts, id, setPosts) {
+    posts = cloneDeep(posts)
+    const index = findIndex(posts, (data) => data._id === id)
+    if (index > -1) {
+        remove(posts, { _id: id })
+        setPosts(posts)
+    }
 }

@@ -61,7 +61,8 @@ const Streams = () => {
 
     useEffect(() => {
         setLoading(allPosts?.isLoading)
-        setPosts(allPosts?.posts)
+        const orderedPosts = orderBy(allPosts?.posts, ['createdAt'], ['desc']);
+        setPosts(orderedPosts);
         setPostsCount(allPosts?.totalPostsCount)
     }, [allPosts])
 
