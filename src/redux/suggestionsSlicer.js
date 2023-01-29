@@ -11,9 +11,10 @@ const suggestionsSlice = createSlice({
     name: "suggestions",
     initialState,
     reducers: {
-        fetchSuggestions: (state, action) => {
-            state.isLoading = action.payload.isLoading
-            state.suggestUsers = [...action.payload.users]
+        addToSuggestions: (state, action) => {
+            const { isLoading, users } = action.payload
+            state.suggestUsers = [...users]
+            state.isLoading = isLoading
         },
 
     },
@@ -32,7 +33,7 @@ const suggestionsSlice = createSlice({
 });
 
 export const {
-    fetchSuggestions,
+    addToSuggestions,
 } = suggestionsSlice.actions;
 
 export default suggestionsSlice.reducer;

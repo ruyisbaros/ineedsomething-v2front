@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import bgImage from "@assets/images/background.jpg"
 import { Button, Input } from '@components/index';
 import { FaArrowLeft } from "react-icons/fa"

@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react'
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { BrowserRouter } from "react-router-dom"
-import { useSelector } from 'react-redux'
 import { Routers } from './routes'
 import { socketService } from '@services/sockets/socket.service'
 import "./App.scss"
-import Toast from '@components/toast/Toast'
+
 
 const App = () => {
 
@@ -19,7 +20,7 @@ const App = () => {
     syncCurrentUser()
   }, [dispatch])
  */
-  const { notifications } = useSelector(store => store)
+
 
   useEffect(() => {
     socketService.setupSocketConnection()
@@ -27,9 +28,7 @@ const App = () => {
 
   return (
     <>
-      {notifications && notifications.length > 0 && (
-        <Toast position="top-right" toastList={notifications} autoDelete={true} />
-      )}
+      <ToastContainer position="bottom-center" limit={1} />
       <BrowserRouter>
         <Routers />
       </BrowserRouter>

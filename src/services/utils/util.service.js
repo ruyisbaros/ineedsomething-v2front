@@ -1,5 +1,5 @@
 import { avatarColors } from "./static.data"
-import { floor, random } from "lodash"
+import { floor, random, some } from "lodash"
 import { authLogout, userLoggedSuccess } from "@redux/currentUserSlicer"
 import { addNotification, clearNotification } from "@redux/notificationSlicer"
 
@@ -85,4 +85,14 @@ export function appImageUrl(version, id) {
         id = id.replace(/['"]+/g, '');
     }
     return `https://res.cloudinary.com/ruyisbaros/image/upload/v${version}/${id}`;
+}
+
+export function checkIfUserIsLocked(blocked, userId) {
+
+    return some(blocked, (id) => id === userId)
+}
+
+export function checkIfUserIsFollowed(userFollowers, postCreatorId, userId) {
+
+    return some(userFollowers, (user) => user._id === postCreatorId || postCreatorId === userId)
 }
