@@ -28,7 +28,7 @@ const Posts = ({ allPosts, userFollowings, postsLoading }) => {
                             <>
                                 {checkPostPrivacy(post, currentUser, followings) &&
                                     <>
-                                <Post post={post} showIcons={false} />
+                                <Post key={post._id} post={post} showIcons={false} />
                                     </>}
                             </>}
                     </div>

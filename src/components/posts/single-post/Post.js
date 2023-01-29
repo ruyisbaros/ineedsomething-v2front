@@ -6,6 +6,7 @@ import { find } from 'lodash';
 import { feelingsList, privacyList } from '@services/utils/static.data';
 
 import "./post.scss"
+import PostCommentSection from '../comments-section/PostCommentSection';
 
 const Post = ({ post, showIcons }) => {
 
@@ -93,6 +94,7 @@ const Post = ({ post, showIcons }) => {
                             </div>
                         )}
                         {(post?.reactions.length > 0 || post?.commentsCount > 0) && <hr />}
+                        <PostCommentSection post={post} />
 
                     </div>
                 </div>
