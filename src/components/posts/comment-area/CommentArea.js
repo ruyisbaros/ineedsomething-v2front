@@ -1,9 +1,13 @@
 import React from 'react'
 import { FaRegCommentAlt } from 'react-icons/fa'
+import Reactions from '../reactions/Reactions'
+import like from "@assets/reactions/like.png"
 import "./commentArea.scss"
 
 
 const CommentArea = ({ post }) => {
+
+    const addReactionPost = async (reaction) => { }
     return (
         <div className="comment-area" data-testid="comment-area">
             <div className="like-icon reactions">
@@ -11,7 +15,7 @@ const CommentArea = ({ post }) => {
                     <div className="like likes-block-icons reaction-icon">
                         <div className="reaction-display like"
                             data-testid="selected-reaction">
-                            <img className="reaction-img" src="" alt="" />
+                            <img className="reaction-img" src={like} alt="" />
                             <span>Like</span>
                         </div>
                         {/* <div className="reaction-display" data-testid="default-reaction">
@@ -20,7 +24,7 @@ const CommentArea = ({ post }) => {
                     </div>
                 </div>
                 <div className="reactions-container app-reactions">
-                    Reactions
+                    <Reactions handleClick={addReactionPost} />
                 </div>
             </div>
             <div className="comment-block" >
