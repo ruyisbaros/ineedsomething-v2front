@@ -2,13 +2,16 @@ import React, { useState } from 'react'
 import { FaSpinner } from 'react-icons/fa'
 import { getSinglePostReactions } from '@services/api/reaction.service'
 import { toast } from 'react-toastify';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { formattedReactions, shortenLongNumbers, generateString } from '@services/utils/util.service';
 import "./reactionsCommentsDisplay.scss"
 import { reactionsMap } from '@services/utils/static.data';
+import { updatePostItem } from '@redux/postSlicer';
+import { toggleReactionsModal } from '@redux/postModalSlicer';
 
 const ReactionsCommentsDisplay = ({ post }) => {
+    const { reactionModalIsOpen } = useSelector(store => store.modal)
     const [postReactions, setPostReactions] = useState([])
     const [reactions, setReactions] = useState([])
     const dispatch = useDispatch()
@@ -29,6 +32,11 @@ const ReactionsCommentsDisplay = ({ post }) => {
             const result = reactions.map((item) => item.value).reduce((prev, next) => prev + next)
             return shortenLongNumbers(result)
         }
+    }
+
+    const openReactionsComponent = () => {
+        dispatch(updatePostItem(post))
+        dispatch(toggleReactionsModal(!reactionModalIsOpen))
     }
 
     useEffect(() => {
@@ -73,7 +81,10 @@ const ReactionsCommentsDisplay = ({ post }) => {
                         }
 
                     </div>
-                    <span onMouseEnter={getPostReactions} className="tooltip-container reactions-count">
+                    <span
+                        onMouseEnter={getPostReactions}
+                        className="tooltip-container reactions-count"
+                        onClick={openReactionsComponent}>
                         {sumAllReactions(reactions)}
                         <div className="tooltip-container-text tooltip-container-likes-bottom" data-testid="tooltip-container">
                             <div className="likes-block-icons-list">
