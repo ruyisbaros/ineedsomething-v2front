@@ -6,7 +6,7 @@ import "./reactionList.scss"
 
 const ReactionList = ({ postReactions }) => {
     return (
-        <div className="modal-reactions-container" data-testid="modal-reactions-container">
+        <div className="modal-reactions-container" >
             {postReactions.map((reaction) => (
                 <div className="modal-reactions-container-list" key={generateString(10)} >
                     <div className="img">

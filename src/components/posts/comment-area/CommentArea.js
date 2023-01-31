@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback } from 'react'
 import { FaRegCommentAlt } from 'react-icons/fa'
 import Reactions from '../reactions/Reactions'
 import like from "@assets/reactions/like.png"
-import "./commentArea.scss"
 import { find, cloneDeep, filter } from 'lodash';
 import { firstLetterUpperCase } from '@services/utils/util.service'
 import { reactionsMap } from '@services/utils/static.data';
@@ -12,16 +11,33 @@ import { addUserReaction, getUserSingleReactionOfPost, removeReactionFromDb } fr
 import useLocalStorage from '@hooks/useLocalStorage';
 import { addReaction } from '@redux/reactionsSlicers'
 import { socketService } from '@services/sockets/socket.service'
+import { updatePostItem, clearPost } from '@redux/postSlicer';
+import "./commentArea.scss"
 
 
 const CommentArea = ({ post }) => {
-    //console.log(post);
     let { reactions } = useSelector(store => store.reactions)
-    //console.log(reactions)
     const { currentUser } = useSelector(store => store.currentUser)
     const [userSelectedReaction, setUserSelectedReaction] = useState("")
     const dispatch = useDispatch()
     const storedUsername = useLocalStorage("username", "get")
+    const selectedPostId = useLocalStorage("selectedPostId", "get")
+    const [setSelectedPostId] = useLocalStorage("selectedPostId", "set")
+
+    const toggleCommentInput = () => {
+        if (!selectedPostId) {
+            setSelectedPostId(post._id)
+            dispatch(updatePostItem(post))
+        } else {
+            if (selectedPostId === post._id) {
+                setSelectedPostId("")
+                dispatch(clearPost())
+            } else {
+                setSelectedPostId(post._id)
+                dispatch(updatePostItem(post))
+            }
+        }
+    }
 
     //Find user's relevant post reaction
     const selectedReaction = useCallback((postReactions) => {
@@ -154,7 +170,7 @@ const CommentArea = ({ post }) => {
                     <Reactions handleClick={addReactionPost} />
                 </div>
             </div>
-            <div className="comment-block" >
+            <div className="comment-block" onClick={toggleCommentInput}>
                 <span className="comments-text">
                     <FaRegCommentAlt className="comment-alt" /> <span>Comments</span>
                 </span>

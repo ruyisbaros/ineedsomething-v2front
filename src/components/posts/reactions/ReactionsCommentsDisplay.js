@@ -9,11 +9,13 @@ import "./reactionsCommentsDisplay.scss"
 import { reactionsMap } from '@services/utils/static.data';
 import { updatePostItem } from '@redux/postSlicer';
 import { toggleReactionsModal } from '@redux/postModalSlicer';
+import { getCommentNames } from '@services/api/comments.service';
 
 const ReactionsCommentsDisplay = ({ post }) => {
     const { reactionModalIsOpen } = useSelector(store => store.modal)
     const [postReactions, setPostReactions] = useState([])
     const [reactions, setReactions] = useState([])
+    const [commentNames, setCommentNames] = useState([])
     const dispatch = useDispatch()
 
     const getPostReactions = async () => {
@@ -22,6 +24,17 @@ const ReactionsCommentsDisplay = ({ post }) => {
             if (res) {
                 setPostReactions(res.data.reactions)
             }
+        } catch (error) {
+            toast.error(error?.response?.data?.message)
+        }
+    }
+
+    const getPostCommentNames = async () => {
+        try {
+            const res = await getCommentNames(post._id)
+            console.log(res.data);
+            setCommentNames([...new Set(res.data.commentNames
+                .names)])
         } catch (error) {
             toast.error(error?.response?.data?.message)
         }
@@ -91,10 +104,10 @@ const ReactionsCommentsDisplay = ({ post }) => {
                                 {postReactions.length === 0 && <FaSpinner className="circle-notch" />}
                                 {postReactions.length > 0 &&
                                     <>
-                                        {postReactions.map(postReaction => (
+                                    {postReactions.slice(0, 19).map(postReaction => (
                                             <span key={generateString(10)}>{postReaction.username}</span>
                                         ))}
-                                        {postReactions.length > 1 && <span>and {postReactions.length - 1} others...</span>}
+                                    {postReactions.length > 20 && <span>and {postReactions.length - 20} others...</span>}
                                     </>
                                 }
                             </div>
@@ -103,16 +116,21 @@ const ReactionsCommentsDisplay = ({ post }) => {
                 </div>
             </div>
             <div className="comment tooltip-container" data-testid="comment-container">
-                <span data-testid="comment-count">
-                    20 Comments
-                </span>
-                <div className="tooltip-container-text tooltip-container-comments-bottom" data-testid="comment-tooltip">
+                {post.commentsCount > 0 &&
+                    <span onMouseEnter={getPostCommentNames}>
+                        {shortenLongNumbers(post.commentsCount)} {post.commentsCount > 1 ? "Comments" : "Comment"}
+                    </span>}
+                <div className="tooltip-container-text tooltip-container-comments-bottom" >
                     <div className="likes-block-icons-list">
-                        <FaSpinner className="circle-notch" />
-                        <div>
-                            <span>Stan</span>
-                            <span>and 50 others...</span>
-                        </div>
+                        {commentNames.length === 0 && <FaSpinner className="circle-notch" />}
+                        {commentNames.length > 0 &&
+                            <>
+                                {commentNames.slice(0, 19).map(comment => (
+                                    <span key={generateString(10)}>{comment}</span>
+                                ))}
+                                {commentNames.length > 20 && <span>and {commentNames.length - 20} others...</span>}
+                            </>
+                        }
                     </div>
                 </div>
             </div>
