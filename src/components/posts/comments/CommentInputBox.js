@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { Input } from '@components/index';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import "./commentInputBox.scss"
 import { addComment } from '@services/api/comments.service';
 import { toast } from 'react-toastify';
@@ -11,7 +11,6 @@ const CommentInputBox = ({ post }) => {
     const { currentUser } = useSelector(store => store.currentUser)
     const [comment, setComment] = useState("")
     const commentInputRef = useRef(null)
-    const dispatch = useDispatch()
 
     const submitComment = async (e) => {
         e.preventDefault()

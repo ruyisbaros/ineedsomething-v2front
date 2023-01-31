@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Avatar from '@components/avatar/Avatar';
 import { FaPencilAlt, FaRegTrashAlt } from 'react-icons/fa';
 import moment from 'moment';
@@ -12,10 +12,15 @@ import useLocalStorage from '@hooks/useLocalStorage';
 import CommentInputBox from '../comments/CommentInputBox';
 import CommentsModal from './../comments-modal/CommentsModal';
 import "./post.scss"
+import { getImage } from '@services/utils/util.service';
+import ImageModal from './../../image/image-modal/ImageModal';
 
 const Post = ({ post, showIcons }) => {
 
     const { reactionModalIsOpen, commentsModalIsOpen } = useSelector(store => store.modal)
+    const [showImageModal, setShowImageModal] = useState(false)
+    const [imageUrl, setImageUrl] = useState("")
+
     const selectedPostId = useLocalStorage("selectedPostId", "get")
     const getFeeling = (name) => {
         const feeling = find(feelingsList, (data) => data.name === name)
@@ -31,7 +36,10 @@ const Post = ({ post, showIcons }) => {
         <>
             {reactionModalIsOpen && <ReactionsModal />}
             {commentsModalIsOpen && <CommentsModal />}
-            <div className="post-body" data-testid="post">
+            {showImageModal &&
+                <ImageModal image={imageUrl} onCancel={() => setShowImageModal(!showImageModal)}
+                    showArrow={false} />}
+            <div className="post-body">
                 <div className="user-post-data">
                     <div className="user-post-data-wrap">
                         <div className="user-post-image">
@@ -89,15 +97,22 @@ const Post = ({ post, showIcons }) => {
 
                             {post?.imgId && !post?.gifUrl && post.bgColor === '#ffffff' && (
                                 <div
-                                    data-testid="post-image"
+                                    onClick={() => {
+                                        setImageUrl(getImage(post?.imgId, post?.imgVersion))
+                                        setShowImageModal(!showImageModal)
+                                    }}
                                     className="image-display-flex"
                                 >
-                                    <img className="post-image" src="" alt="" />
+                                    <img className="post-image" src={`${getImage(post?.imgId, post?.imgVersion)}`} alt="" />
                                 </div>
                             )}
 
                             {post?.gifUrl && post.bgColor === '#ffffff' && (
                                 <div
+                                    onClick={() => {
+                                        setImageUrl(post?.gifUrl)
+                                        setShowImageModal(!showImageModal)
+                                    }}
                                     className="image-display-flex"
                                 >
                                     <img className="post-image" src={`${post?.gifUrl}`} alt="" />

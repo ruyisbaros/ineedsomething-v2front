@@ -125,3 +125,11 @@ export function shortenLongNumbers(data) {
         return millify(data)
     }
 }
+
+export function getImage(imageId, imageVersion) {
+    if (typeof imageVersion === 'string' && typeof imageId === 'string') {
+        imageVersion = imageVersion.replace(/['"]+/g, '');
+        imageId = imageId.replace(/['"]+/g, '');
+    }
+    return `https://res.cloudinary.com/ruyisbaros/image/upload/v${imageVersion}/${imageId}`
+}

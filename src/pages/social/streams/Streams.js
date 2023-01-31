@@ -22,6 +22,7 @@ const Streams = () => {
     const [loading, setLoading] = useState(true)
     const [postsCount, setPostsCount] = useState(0)
     const storedUsername = useLocalStorage("username", "get")
+    const [deletePostId] = useLocalStorage("selectedPostId", "delete")
 
     //Pagination
     const [currentPage, setCurrentPage] = useState(1)
@@ -82,6 +83,7 @@ const Streams = () => {
 
     useEffect(() => {
         getUserReactions()
+        deletePostId()
     }, [])
 
     //Post socket useEffect

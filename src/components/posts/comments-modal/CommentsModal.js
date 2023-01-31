@@ -3,12 +3,12 @@ import ReactionWrapper from './../reaction-wrapper/ReactionWrapper';
 import Avatar from '@components/avatar/Avatar';
 import { toast } from 'react-toastify';
 
-import "./commentsModal.scss"
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { getCommentsOfPost } from '@services/api/comments.service';
 import { closeModal } from '@redux/postModalSlicer';
 import { clearPost } from '@redux/postSlicer';
+import "./commentsModal.scss"
 
 const CommentsModal = () => {
     const { post } = useSelector(store => store)
