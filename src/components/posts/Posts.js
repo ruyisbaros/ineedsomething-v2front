@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux';
 import Post from './single-post/Post';
 import "./Posts.scss"
-import { checkIfUserIsFollowed } from '@services/utils/util.service';
+import { checkIfUserIsFollowed, generateString } from '@services/utils/util.service';
 import { checkPostPrivacy } from '@services/utils/postutils.service';
 
 const Posts = ({ allPosts, userFollowings, postsLoading }) => {
@@ -22,13 +22,13 @@ const Posts = ({ allPosts, userFollowings, postsLoading }) => {
         <div className='posts-container'>
             {
                 posts?.map(post => (
-                    <div key={post._id}>
+                    <div key={generateString(10)}>
                         {(!checkIfUserIsFollowed(currentUser?.blockedBy, post?.userId) || post?.userId === currentUser?._id)
                             &&
                             <>
                                 {checkPostPrivacy(post, currentUser, followings) &&
                                     <>
-                                <Post key={post._id} post={post} showIcons={false} />
+                                <Post key={generateString(10)} post={post} showIcons={false} />
                                     </>}
                             </>}
                     </div>

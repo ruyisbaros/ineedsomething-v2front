@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { FaSpinner } from 'react-icons/fa'
-import like from "@assets/reactions/love.png"
 import { getSinglePostReactions } from '@services/api/reaction.service'
 import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
@@ -44,18 +43,29 @@ const ReactionsCommentsDisplay = ({ post }) => {
                         {reactions.length > 0 &&
                             reactions.map(reaction => (
                                 <div key={generateString(10)} className="tooltip-container">
-                                    <img data-testid="reaction-img" className="reaction-img" src={reactionsMap[reaction.type]} alt="" />
-                                    <div className="tooltip-container-text tooltip-container-bottom" data-testid="reaction-tooltip">
+                                    <img
+                                        className="reaction-img"
+                                        src={reactionsMap[reaction.type]} alt=""
+                                        onMouseEnter={getPostReactions}
+                                    />
+                                    <div className="tooltip-container-text tooltip-container-bottom">
                                         <p className="title">
                                             <img className="title-img" src={reactionsMap[reaction.type]} alt="" />
                                             {reaction.type.toUpperCase()}
                                         </p>
                                         <div className="likes-block-icons-list">
-                                            <FaSpinner className="circle-notch" />
-                                            <div>
-                                                <span>Manny</span>
-                                            </div>
-                                            <span>and 50 others...</span>
+                                            {postReactions.length === 0 && <FaSpinner className="circle-notch" />}
+                                            {postReactions.length > 0 &&
+                                                <>
+                                                    {postReactions.map(postReaction => (
+                                                        <div key={generateString(10)}>
+                                                            {reaction.type === postReaction.type && <span>{postReaction.username}</span>
+                                                            }
+                                                        </div>
+                                                    ))}
+                                                    {postReactions.length > 1 && <span>and {postReactions.length - 1} others...</span>}
+                                                </>
+                                            }
                                         </div>
                                     </div>
                                 </div>
@@ -63,13 +73,19 @@ const ReactionsCommentsDisplay = ({ post }) => {
                         }
 
                     </div>
-                    <span data-testid="reactions-count" className="tooltip-container reactions-count">
-                        20
+                    <span onMouseEnter={getPostReactions} className="tooltip-container reactions-count">
+                        {sumAllReactions(reactions)}
                         <div className="tooltip-container-text tooltip-container-likes-bottom" data-testid="tooltip-container">
                             <div className="likes-block-icons-list">
-                                <FaSpinner className="circle-notch" />
-                                <span>Stan</span>
-                                <span>and 50 others...</span>
+                                {postReactions.length === 0 && <FaSpinner className="circle-notch" />}
+                                {postReactions.length > 0 &&
+                                    <>
+                                        {postReactions.map(postReaction => (
+                                            <span key={generateString(10)}>{postReaction.username}</span>
+                                        ))}
+                                        {postReactions.length > 1 && <span>and {postReactions.length - 1} others...</span>}
+                                    </>
+                                }
                             </div>
                         </div>
                     </span>

@@ -29,7 +29,7 @@ const Streams = () => {
     const bodyRef = useRef(null)
     let appPosts = useRef([])
     const PAGE_SIZE = 3
-    console.log(currentPage);
+    //console.log(currentPage);
 
     useInfiniteScroll(bodyRef, bottomLineRef, fetchPostData)
 
