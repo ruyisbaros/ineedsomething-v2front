@@ -8,3 +8,7 @@ export async function addComment(body) {
 export async function getCommentNames(postId) {
     return await axios.get(`/post/comments/comment_names/${postId}`)
 }
+
+export async function getCommentsOfPost(postId) {
+    return await axios.get(`/post/comments/post_comments/${postId}`)
+}

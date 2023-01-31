@@ -5,14 +5,14 @@ import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { formattedReactions, shortenLongNumbers, generateString } from '@services/utils/util.service';
-import "./reactionsCommentsDisplay.scss"
 import { reactionsMap } from '@services/utils/static.data';
 import { updatePostItem } from '@redux/postSlicer';
-import { toggleReactionsModal } from '@redux/postModalSlicer';
+import { toggleCommentsModal, toggleReactionsModal } from '@redux/postModalSlicer';
 import { getCommentNames } from '@services/api/comments.service';
+import "./reactionsCommentsDisplay.scss"
 
 const ReactionsCommentsDisplay = ({ post }) => {
-    const { reactionModalIsOpen } = useSelector(store => store.modal)
+    const { reactionModalIsOpen, commentsModalIsOpen } = useSelector(store => store.modal)
     const [postReactions, setPostReactions] = useState([])
     const [reactions, setReactions] = useState([])
     const [commentNames, setCommentNames] = useState([])
@@ -50,6 +50,11 @@ const ReactionsCommentsDisplay = ({ post }) => {
     const openReactionsComponent = () => {
         dispatch(updatePostItem(post))
         dispatch(toggleReactionsModal(!reactionModalIsOpen))
+    }
+
+    const openCommentsComponent = () => {
+        dispatch(updatePostItem(post))
+        dispatch(toggleCommentsModal(!commentsModalIsOpen))
     }
 
     useEffect(() => {
@@ -115,7 +120,7 @@ const ReactionsCommentsDisplay = ({ post }) => {
                     </span>
                 </div>
             </div>
-            <div className="comment tooltip-container" data-testid="comment-container">
+            <div className="comment tooltip-container" onClick={openCommentsComponent}>
                 {post.commentsCount > 0 &&
                     <span onMouseEnter={getPostCommentNames}>
                         {shortenLongNumbers(post.commentsCount)} {post.commentsCount > 1 ? "Comments" : "Comment"}

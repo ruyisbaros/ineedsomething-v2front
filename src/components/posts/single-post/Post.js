@@ -7,14 +7,15 @@ import { feelingsList, privacyList } from '@services/utils/static.data';
 
 import PostCommentSection from '../comments-section/PostCommentSection';
 import { useSelector } from 'react-redux';
-import "./post.scss"
 import ReactionsModal from '../reaction-modal/ReactionsModal';
 import useLocalStorage from '@hooks/useLocalStorage';
 import CommentInputBox from '../comments/CommentInputBox';
+import CommentsModal from './../comments-modal/CommentsModal';
+import "./post.scss"
 
 const Post = ({ post, showIcons }) => {
 
-    const { reactionModalIsOpen } = useSelector(store => store.modal)
+    const { reactionModalIsOpen, commentsModalIsOpen } = useSelector(store => store.modal)
     const selectedPostId = useLocalStorage("selectedPostId", "get")
     const getFeeling = (name) => {
         const feeling = find(feelingsList, (data) => data.name === name)
@@ -29,6 +30,7 @@ const Post = ({ post, showIcons }) => {
     return (
         <>
             {reactionModalIsOpen && <ReactionsModal />}
+            {commentsModalIsOpen && <CommentsModal />}
             <div className="post-body" data-testid="post">
                 <div className="user-post-data">
                     <div className="user-post-data-wrap">
