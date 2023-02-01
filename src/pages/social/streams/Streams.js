@@ -26,14 +26,14 @@ const Streams = () => {
 
     //Pagination
     const [currentPage, setCurrentPage] = useState(1)
-    const bottomLineRef = useRef(null)
+    const bottomLineRef = useRef()
     const bodyRef = useRef(null)
     let appPosts = useRef([])
     const PAGE_SIZE = 3
     //console.log(currentPage);
 
     useInfiniteScroll(bodyRef, bottomLineRef, fetchPostData)
-
+    console.log(currentPage);
     function fetchPostData() {
         let pageNum = currentPage
         if (currentPage <= Math.round(postsCount / PAGE_SIZE)) {
@@ -46,11 +46,19 @@ const Streams = () => {
     const fetchAllPosts = async () => {
         try {
             const res = await getAllPosts(currentPage)
+            console.log(res.data.posts);
+
             if (res.data.posts.length) {
-                appPosts = [...posts, ...res.data.posts]
+                /* appPosts = [...posts, ...res.data.posts]
                 const allPosts = uniqBy(appPosts, "_id")
-                const orderedPosts = orderBy(allPosts?.posts, ['createdAt'], ['desc']);
-                setPosts(orderedPosts);
+                const orderedPosts = orderBy(allPosts, ['createdAt'], ['desc']);
+                setPosts(orderedPosts); */
+                setPosts((data) => {
+                    const result = [...data, ...res.data.posts];
+                    const allPosts = uniqBy(result, '_id');
+                    const orderedPosts = orderBy(allPosts, ['createdAt'], ['desc']);
+                    return orderedPosts;
+                });
             }
             setLoading(false)
         } catch (error) {
@@ -69,7 +77,7 @@ const Streams = () => {
         const orderedPosts = orderBy(allPosts?.posts, ['createdAt'], ['desc']);
         setPosts(orderedPosts);
         setPostsCount(allPosts?.totalPostsCount)
-    }, [allPosts])
+    }, [allPosts, dispatch])
 
     //Get user all post reactions
     const getUserReactions = async () => {
