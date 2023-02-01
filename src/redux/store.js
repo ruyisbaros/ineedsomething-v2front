@@ -5,6 +5,7 @@ import notificationSlicer from "./notificationSlicer";
 import postModalSlicer from "./postModalSlicer";
 import postSlicer from "./postSlicer";
 import postStream from "./postStream";
+import reactionsSlicers from "./reactionsSlicers";
 import suggestionsSlice from "./suggestionsSlicer";
 import usersSlicer from "./usersSlicer";
 
@@ -16,6 +17,7 @@ export const store = configureStore({
         notifications: notificationSlicer,
         modal: postModalSlicer,
         post: postSlicer,
-        allPosts: postStream
+        allPosts: postStream,
+        reactions: reactionsSlicers
     },
 });

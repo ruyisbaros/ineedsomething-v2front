@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import photo from "@assets/images/photo.png"
 import gif from "@assets/images/gif.png"
 import feeling from "@assets/images/feeling.png"
-import { openModal, toggleFeelingModal, toggleGifModal, toggleImageModal } from '@redux/postModalSlicer'
+import { openModal } from '@redux/postModalSlicer'
 import AddPost from '../post-modal/AddPost'
 import '@components/posts/post-form/postForm.scss';
 

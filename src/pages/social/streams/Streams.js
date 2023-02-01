@@ -11,6 +11,9 @@ import { orderBy, uniqBy } from 'lodash';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import { getPosts } from '@services/api/post.service';
 import { socketIOPost } from '@services/utils/postutils.service'
+import useLocalStorage from '@hooks/useLocalStorage';
+import { getReactionsByUsername } from '@services/api/reaction.service'
+import { addReaction } from '@redux/reactionsSlicers'
 
 const Streams = () => {
     const { allPosts } = useSelector(store => store)
@@ -18,6 +21,8 @@ const Streams = () => {
     const [posts, setPosts] = useState([])
     const [loading, setLoading] = useState(true)
     const [postsCount, setPostsCount] = useState(0)
+    const storedUsername = useLocalStorage("username", "get")
+    const [deletePostId] = useLocalStorage("selectedPostId", "delete")
 
     //Pagination
     const [currentPage, setCurrentPage] = useState(1)
@@ -25,7 +30,7 @@ const Streams = () => {
     const bodyRef = useRef(null)
     let appPosts = useRef([])
     const PAGE_SIZE = 3
-    console.log(currentPage);
+    //console.log(currentPage);
 
     useInfiniteScroll(bodyRef, bottomLineRef, fetchPostData)
 
@@ -44,8 +49,8 @@ const Streams = () => {
             if (res.data.posts.length) {
                 appPosts = [...posts, ...res.data.posts]
                 const allPosts = uniqBy(appPosts, "_id")
-                //console.log(allPosts);
-                setPosts(allPosts)
+                const orderedPosts = orderBy(allPosts?.posts, ['createdAt'], ['desc']);
+                setPosts(orderedPosts);
             }
             setLoading(false)
         } catch (error) {
@@ -53,11 +58,10 @@ const Streams = () => {
             toast.error(error.response.data.message)
         }
     }
-
     //console.log(allPosts.posts)
-
     useEffect(() => {
         dispatch(getPosts())
+        dispatch(getUserSuggestions())
     }, [dispatch])
 
     useEffect(() => {
@@ -67,12 +71,22 @@ const Streams = () => {
         setPostsCount(allPosts?.totalPostsCount)
     }, [allPosts])
 
+    //Get user all post reactions
+    const getUserReactions = async () => {
+        try {
+            const res = await getReactionsByUsername(storedUsername)
+            dispatch(addReaction(res.data.reactions))
+        } catch (error) {
+            toast.error(error?.response?.data?.message)
+        }
+    }
+
     useEffect(() => {
-        dispatch(getUserSuggestions())
-    }, [dispatch])
+        getUserReactions()
+        deletePostId()
+    }, [])
 
     //Post socket useEffect
-
     useEffect(() => {
         socketIOPost(posts, setPosts)
     }, [posts])

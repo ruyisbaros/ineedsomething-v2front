@@ -2,6 +2,7 @@ import { avatarColors } from "./static.data"
 import { floor, random, some } from "lodash"
 import { authLogout, userLoggedSuccess } from "@redux/currentUserSlicer"
 import { addNotification, clearNotification } from "@redux/notificationSlicer"
+import millify from "millify"
 
 export function createAvatarColor() {
     return avatarColors[floor(random(0.9) * avatarColors.length)]
@@ -95,4 +96,40 @@ export function checkIfUserIsLocked(blocked, userId) {
 export function checkIfUserIsFollowed(userFollowers, postCreatorId, userId) {
 
     return some(userFollowers, (user) => user._id === postCreatorId || postCreatorId === userId)
+}
+
+export function firstLetterUpperCase(letter) {
+    if (!letter) return ""
+    return `${letter.charAt(0).toUpperCase()}${letter.slice(1)}`
+}
+
+export function formattedReactions(reactions) {
+    const postReactions = []
+
+    for (const [key, value] of Object.entries(reactions)) {
+        if (value > 0) {
+            const reactionObj = {
+                type: key,
+                value
+            }
+            postReactions.push(reactionObj)
+        }
+    }
+    return postReactions
+}
+
+export function shortenLongNumbers(data) {
+    if (data === undefined) {
+        return 0;
+    } else {
+        return millify(data)
+    }
+}
+
+export function getImage(imageId, imageVersion) {
+    if (typeof imageVersion === 'string' && typeof imageId === 'string') {
+        imageVersion = imageVersion.replace(/['"]+/g, '');
+        imageId = imageId.replace(/['"]+/g, '');
+    }
+    return `https://res.cloudinary.com/ruyisbaros/image/upload/v${imageVersion}/${imageId}`
 }

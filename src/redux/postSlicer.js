@@ -2,9 +2,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    posts: [],
-    totalPostsCount: 0,
-    isLoading: false,
     _id: '',
     post: '',
     bgColor: '',
@@ -28,9 +25,6 @@ const postSlicer = createSlice({
     name: "post",
     initialState,
     reducers: {
-        getAllPosts: (state, action) => {
-            state.posts = action.payload.posts
-        },
         updatePostItem: (state, action) => {
             for (const [key, value] of Object.entries(action.payload)) {
                 state[key] = value
