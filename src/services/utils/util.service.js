@@ -98,6 +98,11 @@ export function checkIfUserIsFollowed(userFollowers, postCreatorId, userId) {
     return some(userFollowers, (user) => user._id === postCreatorId || postCreatorId === userId)
 }
 
+export function checkIfUserIsOnline(onlineUsers, username) {
+
+    return some(onlineUsers, (user) => user === username?.toLowerCase())
+}
+
 export function firstLetterUpperCase(letter) {
     if (!letter) return ""
     return `${letter.charAt(0).toUpperCase()}${letter.slice(1)}`

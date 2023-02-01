@@ -26,7 +26,7 @@ const Streams = () => {
 
     //Pagination
     const [currentPage, setCurrentPage] = useState(1)
-    const bottomLineRef = useRef()
+    const bottomLineRef = useRef(null)
     const bodyRef = useRef(null)
     let appPosts = useRef([])
     const PAGE_SIZE = 3
