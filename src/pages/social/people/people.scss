@@ -124,7 +124,10 @@
 
         &-buttons {
             height: 50px;
-            text-align: center;
+            display: flex;
+                align-items: center;
+                gap: 10px;
+                justify-content: center;
             transform: translateY(10%);
 
             &-btn {
@@ -137,10 +140,12 @@
                 border-radius: 5px;
                 cursor: pointer;
                 outline: none;
+                
             }
 
             &-btn:nth-child(2) {
                 margin-left: 5px;
+                
             }
 
             .isUserFollowed {

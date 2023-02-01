@@ -6,17 +6,65 @@ import Avatar from '@components/avatar/Avatar';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import CardElementStats from './CardElementStats';
 import CardElementButtons from './CardElementButton';
+import { toast } from 'react-toastify';
+import { getAllUsers, navigateOnProfiles } from '@services/api/user.service';
+import { uniqBy } from 'lodash';
+//import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+
 
 const People = () => {
-    const [users, setUsers] = useState([])
+    const [users, setUsers] = useState([]);
+    //const dispatch = useDispatch()
+    const navigate = useNavigate()
+    const [totalUsersCount, setTotalUsersCount] = useState(0)
     const [onlineUsers, setOnlineUsers] = useState([])
     const [loading, setLoading] = useState(true)
+
+    //Pagination
+    const [currentPage, setCurrentPage] = useState(1)
     const bottomLineRef = useRef(null)
     const bodyRef = useRef(null)
+    const PAGE_SIZE = 6
 
     useInfiniteScroll(bodyRef, bottomLineRef, fetchData)
 
-    function fetchData() { }
+    function fetchData() {
+        let pageNum = currentPage;
+        if (currentPage <= Math.round(totalUsersCount / PAGE_SIZE)) {
+            pageNum += 1;
+            setCurrentPage(pageNum);
+            fetchAllUsers();
+        }
+    }
+
+    const fetchAllUsers = async () => {
+        try {
+            const res = await getAllUsers(currentPage)
+            if (res.data.users.length > 0) {
+                setUsers((data) => {
+                    const result = [...data, ...res.data.users];
+                    const allUsers = uniqBy(result, '_id');
+                    return allUsers;
+                });
+            }
+            setTotalUsersCount(res.data.totalUsers)
+            setLoading(false)
+        } catch (error) {
+            setLoading(false)
+            toast.error(error?.response?.data?.message)
+        }
+    }
+
+    useEffect(() => {
+        fetchAllUsers()
+    }, [currentPage])
+
+    //FOLLOW UNFOLLOW
+    const followUser = async (user) => {
+
+    }
+    const unFollowUser = async (user) => { }
 
     return (
         <div className='card-container' ref={bodyRef}>
@@ -52,9 +100,9 @@ const People = () => {
                                 isChecked={checkIfUserIsFollowed([], user._id)}
                                 btnTextOne="Follow"
                                 btnTextTwo="UnFollow"
-                                onClickBtnOne={() => { }}
-                                onClickBtnTwo={() => { }}
-                                onNavigateToProfile={() => { }}
+                                onClickBtnOne={() => followUser(user)}
+                                onClickBtnTwo={() => unFollowUser(user)}
+                                onNavigateToProfile={() => navigateOnProfiles(user, navigate)}
                             />
                         </div>
                     ))}

@@ -11,7 +11,7 @@ const usersSlicer = createSlice({
     initialState,
     reducers: {
         fetchUsers: (state, action) => {
-            state.users = [...action.payload.users]
+            state.users = [...state.users, ...action.payload.users]
             state.isLoading = action.payload.isLoading
         },
 
