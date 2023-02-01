@@ -49,8 +49,8 @@ const Streams = () => {
             if (res.data.posts.length) {
                 appPosts = [...posts, ...res.data.posts]
                 const allPosts = uniqBy(appPosts, "_id")
-                //console.log(allPosts);
-                setPosts(allPosts)
+                const orderedPosts = orderBy(allPosts?.posts, ['createdAt'], ['desc']);
+                setPosts(orderedPosts);
             }
             setLoading(false)
         } catch (error) {
