@@ -3,6 +3,7 @@ import { useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { updatePostItem } from '@redux/postSlicer';
 import '@components/select-dropdown/selectDropdown.scss';
+import { generateString } from '@services/utils/util.service';
 
 const SelectDropdown = ({ isActive, setSelectedItem, items = [] }) => {
     const dropdownRef = useRef(null);
@@ -18,7 +19,7 @@ const SelectDropdown = ({ isActive, setSelectedItem, items = [] }) => {
             <nav ref={dropdownRef} className={`menu ${isActive ? 'active' : 'inactive'}`}>
                 <ul>
                     {items.map((item, index) => (
-                        <li data-testid="select-dropdown" key={index} onClick={() => selectItem(item)}>
+                        <li data-testid="select-dropdown" key={generateString(10)} onClick={() => selectItem(item)}>
                             <div className="menu-icon">{item.icon}</div>
                             <div className="menu-text">
                                 <div className="menu-text-header">{item.topText}</div>

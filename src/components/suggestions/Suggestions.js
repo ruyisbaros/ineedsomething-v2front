@@ -4,6 +4,7 @@ import { Button } from '@components/index';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import "./suggestions.scss"
+import { generateString } from '@services/utils/util.service';
 
 const Suggestions = () => {
     const { suggestUsers } = useSelector(store => store.suggestions)
@@ -24,7 +25,8 @@ const Suggestions = () => {
             <div className="suggestions-container">
                 <div className="suggestions">
                     {users?.map((user, index) => (
-                        <div data-testid="suggestions-item" className="suggestions-item" key={index}>
+                        <div data-testid="suggestions-item" className="suggestions-item"
+                            key={generateString(10)}>
                             <Avatar
                                 name={user?.username}
                                 bgColor={user?.avatarColor}

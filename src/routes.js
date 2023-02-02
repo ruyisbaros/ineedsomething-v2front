@@ -69,7 +69,7 @@ export const Routers = () => {
                 {
                     path: "following",
                     element: (
-                        <Suspense>
+                        <Suspense fallback={<CardSkeleton />}>
                             <Following />
                         </Suspense>
                     )
@@ -77,7 +77,7 @@ export const Routers = () => {
                 {
                     path: "followers",
                     element: (
-                        <Suspense>
+                        <Suspense fallback={<CardSkeleton />}>
                             <Followers />
                         </Suspense>
                     )

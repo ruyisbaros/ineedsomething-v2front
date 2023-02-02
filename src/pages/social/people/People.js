@@ -7,11 +7,13 @@ import CardElementStats from './CardElementStats';
 import CardElementButtons from './CardElementButton';
 import { toast } from 'react-toastify';
 import { getAllUsers, navigateOnProfiles } from '@services/api/user.service';
-import { uniqBy } from 'lodash';
+import { uniqBy, cloneDeep } from 'lodash';
 //import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import "./people.scss"
+import { followUser, getFollowings, socketIOFollowUnFollow, unFollowUser } from '@services/api/follower.service';
+import { socketService } from '@services/sockets/socket.service';
 
 
 const People = () => {
@@ -21,6 +23,7 @@ const People = () => {
     const navigate = useNavigate()
     const [totalUsersCount, setTotalUsersCount] = useState(0)
     const [onlineUsers, setOnlineUsers] = useState([])
+    const [followings, setFollowings] = useState([])
     const [loading, setLoading] = useState(true)
 
     //Pagination
@@ -51,21 +54,56 @@ const People = () => {
                 });
             }
             setTotalUsersCount(res.data.totalUsers)
+
             setLoading(false)
         } catch (error) {
             setLoading(false)
             toast.error(error?.response?.data?.message)
         }
     }, [currentPage])
+
+    const getUserFollowings = async () => {
+        try {
+            const res = await getFollowings()
+            setFollowings(res.data.followings)
+        } catch (error) {
+            toast.error(error?.response?.data?.message)
+        }
+    }
+
+    useEffect(() => {
+        getUserFollowings()
+    }, [])
+
     useEffect(() => {
         fetchAllUsers()
+
     }, [fetchAllUsers])
 
     //FOLLOW UNFOLLOW
-    const followUser = async (user) => {
-
+    const handleFollowUser = async (user) => {
+        try {
+            const res = await followUser(user._id)
+            toast.info(res.data.message)
+        } catch (error) {
+            toast.error(error?.response?.data?.message)
+        }
     }
-    const unFollowUser = async (user) => { }
+    const handleUnFollowUser = async (user) => {
+        try {
+            user = cloneDeep(user)
+            user.followersCount -= 1
+            socketService?.socket?.emit("unFollow", user)
+            const res = await unFollowUser(user._id)
+            toast.info(res.data.message)
+        } catch (error) {
+            toast.error(error?.response?.data?.message)
+        }
+    }
+
+    useEffect(() => {
+        socketIOFollowUnFollow(users, followings, setFollowings, setUsers)
+    }, [followings, users])
 
     return (
         <div className='card-container' ref={bodyRef}>
@@ -98,11 +136,11 @@ const People = () => {
                                 followingCount={user.followingCount}
                             />
                             <CardElementButtons
-                                isChecked={checkIfUserIsFollowed([], user._id)}
+                                isChecked={checkIfUserIsFollowed(followings, user._id)}
                                 btnTextOne="Follow"
                                 btnTextTwo="UnFollow"
-                                onClickBtnOne={() => followUser(user)}
-                                onClickBtnTwo={() => unFollowUser(user)}
+                                onClickBtnOne={() => handleFollowUser(user)}
+                                onClickBtnTwo={() => handleUnFollowUser(user)}
                                 onNavigateToProfile={() => navigateOnProfiles(user, navigate)}
                             />
                         </div>

@@ -23,7 +23,8 @@ const Posts = ({ allPosts, userFollowings, postsLoading }) => {
             {
                 posts?.map(post => (
                     <div key={generateString(10)}>
-                        {(!checkIfUserIsFollowed(currentUser?.blockedBy, post?.userId) || post?.userId === currentUser?._id)
+                        {(!checkIfUserIsFollowed(currentUser?.blockedBy, post?.userId, currentUser._id) || post?.userId === currentUser?._id)
+
                             &&
                             <>
                                 {checkPostPrivacy(post, currentUser, followings) &&

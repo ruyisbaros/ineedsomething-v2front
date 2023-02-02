@@ -95,7 +95,9 @@ export function checkIfUserIsLocked(blocked, userId) {
 
 export function checkIfUserIsFollowed(userFollowers, postCreatorId, userId) {
 
-    return some(userFollowers, (user) => user._id === postCreatorId || postCreatorId === userId)
+    const result = some(userFollowers, (id) => id === postCreatorId || postCreatorId === userId)
+    //console.log(result);
+    return result
 }
 
 export function checkIfUserIsOnline(onlineUsers, username) {
