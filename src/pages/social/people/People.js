@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
-import "./people.scss"
+import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { checkIfUserIsOnline, generateString, checkIfUserIsFollowed } from '@services/utils/util.service';
 import { FaCircle } from 'react-icons/fa';
 import Avatar from '@components/avatar/Avatar';
@@ -11,9 +10,12 @@ import { getAllUsers, navigateOnProfiles } from '@services/api/user.service';
 import { uniqBy } from 'lodash';
 //import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import "./people.scss"
 
 
 const People = () => {
+    const { currentUser } = useSelector(store => store.currentUser)
     const [users, setUsers] = useState([]);
     //const dispatch = useDispatch()
     const navigate = useNavigate()
@@ -38,7 +40,7 @@ const People = () => {
         }
     }
 
-    const fetchAllUsers = async () => {
+    const fetchAllUsers = useCallback(async () => {
         try {
             const res = await getAllUsers(currentPage)
             if (res.data.users.length > 0) {
@@ -54,11 +56,10 @@ const People = () => {
             setLoading(false)
             toast.error(error?.response?.data?.message)
         }
-    }
-
+    }, [currentPage])
     useEffect(() => {
         fetchAllUsers()
-    }, [currentPage])
+    }, [fetchAllUsers])
 
     //FOLLOW UNFOLLOW
     const followUser = async (user) => {

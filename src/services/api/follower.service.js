@@ -13,17 +13,17 @@ export async function getFollowings() {
     return await axios.get("/user/followers/get_followings")
 }
 
-export async function follow(id) {
+export async function followUser(id) {
     return await axios.put(`/user/followers/follow/${id}`)
 }
-export async function unFollow(id) {
+export async function unFollowUser(id) {
     return await axios.put(`/user/followers/un_follow/${id}`)
 }
-export async function block(id) {
+export async function blockUser(id) {
     return await axios.put(`/user/followers/block/${id}`)
 }
 
-export async function unBlock(id) {
+export async function unBlockUser(id) {
     return await axios.put(`/user/followers/un_block/${id}`)
 }
 
