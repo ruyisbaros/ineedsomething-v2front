@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux';
 import Post from './single-post/Post';
-import { checkIfUserIsLocked, generateString } from '@services/utils/util.service';
+import { checkIfUserIsLocked } from '@services/utils/util.service';
 import { checkPostPrivacy } from '@services/utils/postutils.service';
 import "./Posts.scss"
 
@@ -9,7 +9,7 @@ const Posts = ({ allPosts, userFollowings, postsLoading }) => {
     const { currentUser } = useSelector(store => store.currentUser)
     const [posts, setPosts] = useState([])
     const [followings, setFollowings] = useState([])
-    const [setLoading] = useState(false)
+    const [loading, setLoading] = useState(false)
 
     useEffect(() => {
         setPosts(allPosts)

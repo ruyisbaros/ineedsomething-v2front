@@ -1,6 +1,6 @@
 import React from 'react'
 import moment from 'moment';
-import { Avatar } from '@components/avatar/Avatar';
+import Avatar from '@components/avatar/Avatar';
 import { FaTrash } from 'react-icons/fa';
 import "./galleryImage.scss"
 
