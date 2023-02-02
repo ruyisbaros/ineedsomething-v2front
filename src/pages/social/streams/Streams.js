@@ -14,11 +14,13 @@ import { socketIOPost } from '@services/utils/postutils.service'
 import useLocalStorage from '@hooks/useLocalStorage';
 import { getReactionsByUsername } from '@services/api/reaction.service'
 import { addReaction } from '@redux/reactionsSlicers'
+import { getFollowings } from '@services/api/follower.service';
 
 const Streams = () => {
     const { allPosts } = useSelector(store => store)
     const dispatch = useDispatch()
     const [posts, setPosts] = useState([])
+    const [followings, setFollowings] = useState([])
     const [loading, setLoading] = useState(true)
     const [postsCount, setPostsCount] = useState(0)
     const storedUsername = useLocalStorage("username", "get")
@@ -49,10 +51,7 @@ const Streams = () => {
             console.log(res.data.posts);
 
             if (res.data.posts.length) {
-                /* appPosts = [...posts, ...res.data.posts]
-                const allPosts = uniqBy(appPosts, "_id")
-                const orderedPosts = orderBy(allPosts, ['createdAt'], ['desc']);
-                setPosts(orderedPosts); */
+
                 setPosts((data) => {
                     const result = [...data, ...res.data.posts];
                     const allPosts = uniqBy(result, '_id');
@@ -99,12 +98,26 @@ const Streams = () => {
         socketIOPost(posts, setPosts)
     }, [posts])
 
+    //get followings
+    const getUserFollowings = async () => {
+        try {
+            const res = await getFollowings()
+            setFollowings(res.data.followings)
+        } catch (error) {
+            toast.error(error?.response?.data?.message)
+        }
+    }
+
+    useEffect(() => {
+        getUserFollowings()
+    }, [])
+
     return (
         <div className="streams">
             <div className="streams-content">
                 <div className="streams-post" ref={bodyRef} style={{ background: "white" }}>
                     <PostForm />
-                    <Posts allPosts={posts} postsLoading={loading} userFollowings={[]} />
+                    <Posts allPosts={posts} postsLoading={loading} userFollowings={followings} />
                     <div ref={bottomLineRef} style={{ marginBottom: "50px", height: "50px" }}></div>
                 </div>
                 <div className="streams-suggestions">

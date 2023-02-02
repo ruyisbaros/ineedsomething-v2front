@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import { generateString, checkIfUserIsFollowed } from '@services/utils/util.service';
+import { checkIfUserIsFollowed } from '@services/utils/util.service';
 import Avatar from '@components/avatar/Avatar';
 import { toast } from 'react-toastify';
 import { navigateOnProfiles } from '@services/api/user.service';
 import { useNavigate } from 'react-router-dom';
-import { followUser, getFollowings, socketIOFollowUnFollow, unFollowUser } from '@services/api/follower.service';
+import { followUser, getFollowings, unFollowUser } from '@services/api/follower.service';
 import { socketService } from '@services/sockets/socket.service';
 import { socketIORemoveFollowing } from './../../../services/api/follower.service';
 import CardElementStats from './../people/CardElementStats';
@@ -14,7 +14,6 @@ import "./following.scss"
 
 const Following = () => {
     const navigate = useNavigate()
-    const [totalUsersCount, setTotalUsersCount] = useState(0)
     const [followings, setFollowings] = useState([])
     const [loading, setLoading] = useState(true)
 

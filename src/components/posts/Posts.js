@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux';
 import Post from './single-post/Post';
-import "./Posts.scss"
 import { checkIfUserIsLocked, generateString } from '@services/utils/util.service';
 import { checkPostPrivacy } from '@services/utils/postutils.service';
+import "./Posts.scss"
 
 const Posts = ({ allPosts, userFollowings, postsLoading }) => {
     const { currentUser } = useSelector(store => store.currentUser)
@@ -21,8 +21,8 @@ const Posts = ({ allPosts, userFollowings, postsLoading }) => {
     return (
         <div className='posts-container'>
             {
-                posts?.map(post => (
-                    <div key={post?._id}>
+                currentUser && posts?.map(post => (
+                    <div >
                         {(!checkIfUserIsLocked(currentUser?.blockedBy, post?.userId, currentUser._id) || post?.userId === currentUser?._id)
 
                             &&
