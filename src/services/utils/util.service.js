@@ -89,19 +89,14 @@ export function appImageUrl(version, id) {
 }
 
 export function checkIfUserIsLocked(blocked, userId) {
-
     return some(blocked, (id) => id === userId)
 }
 
 export function checkIfUserIsFollowed(userFollowers, postCreatorId, userId) {
-
-    const result = some(userFollowers, (id) => id === postCreatorId || postCreatorId === userId)
-    //console.log(result);
-    return result
+    return some(userFollowers, (user) => user._id === postCreatorId || postCreatorId === userId)
 }
 
 export function checkIfUserIsOnline(onlineUsers, username) {
-
     return some(onlineUsers, (user) => user === username?.toLowerCase())
 }
 

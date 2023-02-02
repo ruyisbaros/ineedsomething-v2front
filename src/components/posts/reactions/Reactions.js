@@ -1,6 +1,7 @@
 import React from 'react'
 import "./reactions.scss"
 import { reactionsMap } from '@services/utils/static.data';
+import { generateString } from '@services/utils/util.service';
 
 
 const Reactions = ({ handleClick, showLabel = true }) => {

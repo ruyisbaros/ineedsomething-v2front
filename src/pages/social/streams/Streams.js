@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react'
+import React, { useRef, useEffect, useState, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import "@pages/social/streams/streams.scss"
 import Suggestions from '@components/suggestions/Suggestions'
@@ -28,7 +28,7 @@ const Streams = () => {
     const [currentPage, setCurrentPage] = useState(1)
     const bottomLineRef = useRef()
     const bodyRef = useRef(null)
-    let appPosts = useRef([])
+    //let appPosts = useRef([])
     const PAGE_SIZE = 3
     //console.log(currentPage);
 
@@ -80,19 +80,19 @@ const Streams = () => {
     }, [allPosts, dispatch])
 
     //Get user all post reactions
-    const getUserReactions = async () => {
+    const getUserReactions = useCallback(async () => {
         try {
             const res = await getReactionsByUsername(storedUsername)
             dispatch(addReaction(res.data.reactions))
         } catch (error) {
             toast.error(error?.response?.data?.message)
         }
-    }
+    }, [dispatch, storedUsername])
 
     useEffect(() => {
         getUserReactions()
         deletePostId()
-    }, [])
+    }, [getUserReactions])
 
     //Post socket useEffect
     useEffect(() => {

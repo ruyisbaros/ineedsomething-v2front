@@ -8,7 +8,7 @@ const ReactionList = ({ postReactions }) => {
     return (
         <div className="modal-reactions-container" >
             {postReactions.map((reaction) => (
-                <div className="modal-reactions-container-list" key={generateString(10)} >
+                <div className="modal-reactions-container-list" key={reaction.username} >
                     <div className="img">
                         <Avatar
                             name={reaction?.username}

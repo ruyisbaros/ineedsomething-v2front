@@ -136,7 +136,7 @@ const People = () => {
                                 followingCount={user.followingCount}
                             />
                             <CardElementButtons
-                                isChecked={checkIfUserIsFollowed(followings, user._id)}
+                                isChecked={checkIfUserIsFollowed(followings, user._id, currentUser._id)}
                                 btnTextOne="Follow"
                                 btnTextTwo="UnFollow"
                                 onClickBtnOne={() => handleFollowUser(user)}

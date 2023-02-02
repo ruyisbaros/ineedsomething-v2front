@@ -67,7 +67,7 @@ const ReactionsCommentsDisplay = ({ post }) => {
                 <div className="likes-block">
                     <div className="likes-block-icons reactions-icon-display">
                         {reactions.length > 0 &&
-                            reactions.map(reaction => (
+                            reactions.slice(0, 10).map(reaction => (
                                 <div key={generateString(10)} className="tooltip-container">
                                     <img
                                         className="reaction-img"
@@ -84,12 +84,12 @@ const ReactionsCommentsDisplay = ({ post }) => {
                                             {postReactions.length > 0 &&
                                                 <>
                                                     {postReactions.map(postReaction => (
-                                                        <div key={generateString(10)}>
+                                                        <div key={postReaction._id}>
                                                             {reaction.type === postReaction.type && <span>{postReaction.username}</span>
                                                             }
                                                         </div>
                                                     ))}
-                                                    {postReactions.length > 1 && <span>and {postReactions.length - 1} others...</span>}
+                                                {postReactions.length > 10 && <span>and {postReactions.length - 10} others...</span>}
                                                 </>
                                             }
                                         </div>
@@ -110,9 +110,9 @@ const ReactionsCommentsDisplay = ({ post }) => {
                                 {postReactions.length > 0 &&
                                     <>
                                     {postReactions.slice(0, 19).map(postReaction => (
-                                            <span key={generateString(10)}>{postReaction.username}</span>
+                                        <span key={postReaction.username}>{postReaction.username}</span>
                                         ))}
-                                    {postReactions.length > 20 && <span>and {postReactions.length - 20} others...</span>}
+                                    {postReactions.length > 1 && <span>and {postReactions.length - 1} others...</span>}
                                     </>
                                 }
                             </div>

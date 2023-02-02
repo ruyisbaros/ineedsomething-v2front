@@ -50,7 +50,7 @@ const Followers = () => {
         try {
             socketService?.socket?.emit("block user", { blockedUser: id, blockedBy: currentUser?._id })
             const res = await blockUser(id)
-            toast.success(res.data.message)
+            toast.info(res.data.message)
         } catch (error) {
             toast.error(error?.response?.data?.message)
         }
@@ -79,7 +79,7 @@ const Followers = () => {
             {followers.length &&
                 <div className="card-element">
                     {followers.map(user => (
-                        <div key={generateString(10)} className="card-element-item">
+                        <div key={user?.username} className="card-element-item">
                             <div className="card-element-header">
                                 <div className="card-element-header-bg"></div>
                                 <Avatar
@@ -122,6 +122,7 @@ const Followers = () => {
                     You have no followers
                 </div>
             }
+            <div style={{ marginBottom: "80px", height: "80px" }}></div>
         </div>
     )
 }

@@ -7,9 +7,9 @@ import { useNavigate } from 'react-router-dom';
 import { followUser, getFollowings, socketIOFollowUnFollow, unFollowUser } from '@services/api/follower.service';
 import { socketService } from '@services/sockets/socket.service';
 import { socketIORemoveFollowing } from './../../../services/api/follower.service';
-import "./following.scss"
 import CardElementStats from './../people/CardElementStats';
 import CardElementButtons from './../people/CardElementButton';
+import "./following.scss"
 
 
 const Following = () => {
@@ -61,7 +61,7 @@ const Following = () => {
             {followings.length &&
                 <div className="card-element">
                     {followings.map(user => (
-                        <div key={generateString(10)} className="card-element-item">
+                        <div key={user?.username} className="card-element-item">
 
                             <div className="card-element-header">
                                 <div className="card-element-header-bg"></div>
@@ -105,7 +105,7 @@ const Following = () => {
                     You don't follow anyone!
                 </div>
             }
-
+            <div style={{ marginBottom: "80px", height: "80px" }}></div>
         </div>
     )
 }
