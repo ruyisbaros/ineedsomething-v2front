@@ -9,7 +9,7 @@ const Posts = ({ allPosts, userFollowings, postsLoading }) => {
     const { currentUser } = useSelector(store => store.currentUser)
     const [posts, setPosts] = useState([])
     const [followings, setFollowings] = useState([])
-    const [loading, setLoading] = useState(false)
+    const [setLoading] = useState(false)
 
     useEffect(() => {
         setPosts(allPosts)
