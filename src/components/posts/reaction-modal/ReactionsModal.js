@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { reactionsColor, reactionsMap } from '@services/utils/static.data'
 import ReactionWrapper from '../reaction-wrapper/ReactionWrapper'
 import ReactionList from './ReactionList'
-import { shortenLongNumbers, formattedReactions } from '@services/utils/util.service';
+import { shortenLongNumbers, formattedReactions, generateString } from '@services/utils/util.service';
 import { useSelector, useDispatch } from 'react-redux';
 import { getSinglePostReactions } from '@services/api/reaction.service';
 import { toast } from 'react-toastify';
@@ -69,7 +69,7 @@ const ReactionsModal = () => {
                             onClick={viewAll}>All</li>
                         {formattedReactionList.map((reaction, index) => (
                             <li
-                                key={index}
+                                key={reaction?.type}
                                 className={`${reaction?.type === reactionType ? "activeTab" : ""}`}
                                 style={{ color: `${reaction?.type === reactionType ? reactionColor : ""}` }}
                                 onClick={() => listReactions(reaction?.type)}

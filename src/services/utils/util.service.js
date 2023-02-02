@@ -1,5 +1,5 @@
 import { avatarColors } from "./static.data"
-import { floor, random, some } from "lodash"
+import { findIndex, floor, random, some } from "lodash"
 import { authLogout, userLoggedSuccess } from "@redux/currentUserSlicer"
 import { addNotification, clearNotification } from "@redux/notificationSlicer"
 import millify from "millify"
@@ -89,17 +89,14 @@ export function appImageUrl(version, id) {
 }
 
 export function checkIfUserIsLocked(blocked, userId) {
-
     return some(blocked, (id) => id === userId)
 }
 
 export function checkIfUserIsFollowed(userFollowers, postCreatorId, userId) {
-
     return some(userFollowers, (user) => user._id === postCreatorId || postCreatorId === userId)
 }
 
 export function checkIfUserIsOnline(onlineUsers, username) {
-
     return some(onlineUsers, (user) => user === username?.toLowerCase())
 }
 
@@ -137,4 +134,12 @@ export function getImage(imageId, imageVersion) {
         imageId = imageId.replace(/['"]+/g, '');
     }
     return `https://res.cloudinary.com/ruyisbaros/image/upload/v${imageVersion}/${imageId}`
+}
+
+export function removeUserFromList(list, userId) {
+    const index = findIndex(list, (id) => id === userId)
+    if (index > -1) {
+        list.splice(index, 1)
+    }
+    return list
 }

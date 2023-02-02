@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Avatar from '@components/avatar/Avatar';
 import { FaPencilAlt, FaRegTrashAlt } from 'react-icons/fa';
 import moment from 'moment';
@@ -11,15 +11,17 @@ import ReactionsModal from '../reaction-modal/ReactionsModal';
 import useLocalStorage from '@hooks/useLocalStorage';
 import CommentInputBox from '../comments/CommentInputBox';
 import CommentsModal from './../comments-modal/CommentsModal';
-import "./post.scss"
 import { getImage } from '@services/utils/util.service';
 import ImageModal from './../../image/image-modal/ImageModal';
+import "./post.scss"
+import { getImageBackgroundColor } from '@services/utils/image.utils.service';
 
 const Post = ({ post, showIcons }) => {
 
     const { reactionModalIsOpen, commentsModalIsOpen } = useSelector(store => store.modal)
     const [showImageModal, setShowImageModal] = useState(false)
     const [imageUrl, setImageUrl] = useState("")
+    const [backgroundImageColor, setBackgroundImageColor] = useState("")
 
     const selectedPostId = useLocalStorage("selectedPostId", "get")
     const getFeeling = (name) => {
@@ -31,6 +33,22 @@ const Post = ({ post, showIcons }) => {
         const privacy = find(privacyList, (data) => data.topText === type)
         return privacy?.icon
     }
+
+    const backgroundImgColor = async (post) => {
+        let imgUrl = ""
+        if (post?.imgId && !post?.gifUrl && post.bgColor === '#ffffff') {
+            imgUrl = getImage(post?.imgId, post?.imgVersion)
+        } else if (post?.gifUrl && post.bgColor === '#ffffff') {
+            imgUrl = post?.gifUrl
+        }
+        const bgColor = await getImageBackgroundColor(imgUrl)
+        setBackgroundImageColor(bgColor)
+    }
+
+    useEffect(() => {
+        backgroundImgColor(post)
+    }, [post])
+
 
     return (
         <>
@@ -102,8 +120,15 @@ const Post = ({ post, showIcons }) => {
                                         setShowImageModal(!showImageModal)
                                     }}
                                     className="image-display-flex"
+                                    style={{
+                                        height: "600px",
+                                        backgroundColor: `${backgroundImageColor}`
+                                    }}
                                 >
-                                    <img className="post-image" src={`${getImage(post?.imgId, post?.imgVersion)}`} alt="" />
+                                    <img
+                                        className="post-image"
+                                        style={{ objectFit: "contain" }}
+                                        src={`${getImage(post?.imgId, post?.imgVersion)}`} alt="" />
                                 </div>
                             )}
 
@@ -114,8 +139,12 @@ const Post = ({ post, showIcons }) => {
                                         setShowImageModal(!showImageModal)
                                     }}
                                     className="image-display-flex"
+                                    style={{ height: "600px", backgroundColor: `${backgroundImageColor}` }}
                                 >
-                                    <img className="post-image" src={`${post?.gifUrl}`} alt="" />
+                                    <img
+                                        className="post-image"
+                                        style={{ objectFit: "contain" }}
+                                        src={`${post?.gifUrl}`} alt="" />
                                 </div>
                             )}
                             {(post?.reactions.length > 0 || post?.commentsCount > 0) && <hr />}

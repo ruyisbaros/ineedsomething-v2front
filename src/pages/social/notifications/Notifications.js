@@ -4,7 +4,7 @@ import Avatar from '@components/avatar/Avatar'
 import { FaCircle, FaRegCircle, FaRegTrashAlt } from 'react-icons/fa'
 import "./notifications.scss"
 import { deleteUserNotifications, getUserNotifications } from '@services/api/notification.service'
-import { dispatchNotifications } from '@services/utils/util.service';
+import { dispatchNotifications, generateString } from '@services/utils/util.service';
 import { markMessageAsRead, socketIONotification } from '@services/sockets/notification.socket.service'
 import NotificationPreview from '@components/dialog/NotificationPreview'
 
@@ -86,7 +86,8 @@ const Notifications = () => {
                 {notifications.length > 0 && (
                     <div className="notifications-box">
                         {notifications?.map((notification, index) => (
-                            <div className="notification-box" data-testid="notification-box" key={index}
+                            <div className="notification-box"
+                                key={generateString(10)}
                                 onClick={() => markAsRead(notification)}>
                                 <div className="notification-box-sub-card">
                                     <div className="notification-box-sub-card-media">

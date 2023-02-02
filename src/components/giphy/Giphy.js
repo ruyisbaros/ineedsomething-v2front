@@ -8,6 +8,7 @@ import '@components/giphy/giphy.scss';
 import { Input } from '@components/index';
 import Spinner from '@components/spinner/Spinner';
 import { positionCursor } from '@services/utils/postutils.service';
+import { generateString } from '@services/utils/util.service';
 
 const Giphy = () => {
     const { gifModalIsOpen } = useSelector(store => store.modal)
@@ -50,7 +51,7 @@ const Giphy = () => {
                                 }}
                                 className="giphy-container-picker-list-item"
                                 data-testid="list-item"
-                                key={index}
+                                key={generateString(10)}
                             >
                                 <img style={{ width: '470px' }} src={`${gif.images.original.url}`} alt="" />
                             </li>

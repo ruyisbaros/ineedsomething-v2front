@@ -2,7 +2,7 @@ import React, { useEffect, useCallback, useState } from 'react'
 import { cloneDeep } from "lodash"
 import { useDispatch } from 'react-redux'
 import "@components/toast/toast.scss"
-import { dispatchClearNotifications } from '@services/utils/util.service'
+import { dispatchClearNotifications, generateString } from '@services/utils/util.service'
 
 const Toast = ({ toastList, position, autoDelete, autoDeleteTime = 2000 }) => {
 
@@ -42,7 +42,7 @@ const Toast = ({ toastList, position, autoDelete, autoDeleteTime = 2000 }) => {
             {
                 list.map((toast, index) => (
                     <div
-                        key={index}
+                        key={generateString(10)}
                         className={`toast-notification toast ${position}`}
                         style={{ backgroundColor: toast.backgroundColor }}
                     >

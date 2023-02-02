@@ -22,6 +22,7 @@ import Giphy from '@components/giphy/Giphy';
 import { toast } from 'react-toastify';
 import { createPostNoImage } from '@services/api/post.service';
 import Spinner from '@components/spinner/Spinner';
+import { generateString } from '@services/utils/util.service';
 
 const AddPost = () => {
     const { gifModalIsOpen, feeling, feelingsIsOpen } = useSelector(store => store.modal)
@@ -279,7 +280,7 @@ const AddPost = () => {
                             <ul>
                                 {bgColors.map((color, index) => (
                                     <li
-                                        key={index}
+                                        key={generateString(10)}
                                         className={`${color === "#ffffff" ? "whiteColorBorder" : ""}`}
                                         style={{ backgroundColor: `${color}`, cursor: "pointer" }}
                                         onClick={() => {
