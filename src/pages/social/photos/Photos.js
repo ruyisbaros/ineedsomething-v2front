@@ -3,40 +3,24 @@ import { useSelector } from 'react-redux';
 import { generateString, checkIfUserIsLocked, getImage } from '@services/utils/util.service';
 import { checkPostPrivacy } from '@services/utils/postutils.service';
 import { getAllPostsWithImages } from '@services/api/post.service';
-import useInfiniteScroll from '@hooks/useInfiniteScroll';
-import { useRef } from 'react';
 import { toast } from 'react-toastify';
 import { getFollowings } from '@services/api/follower.service';
-import "./photos.scss"
 import GalleryImage from '@components/image/image-gallery/GalleryImage';
+import ImageModal from '@components/image/image-modal/ImageModal';
 
+import "./photos.scss"
 
 const Photos = () => {
     const { currentUser } = useSelector(store => store.currentUser)
-    const [photos, setPhotos] = useState([])
+    const [imgUrl, setImgUrl] = useState([])
     const [posts, setPosts] = useState([])
     const [followings, setFollowings] = useState([])
     const [loading, setLoading] = useState(true)
-    const [postsCount, setPostsCount] = useState(0)
-
-    //Pagination
-    /* const [currentPage, setCurrentPage] = useState(1)
-    const bottomLineRef = useRef()
-    const bodyRef = useRef(null)
-    //let appPosts = useRef([])
-    const PAGE_SIZE = 3
-    //console.log(currentPage);
-
-    useInfiniteScroll(bodyRef, bottomLineRef, fetchPostData)
-    console.log(currentPage);
-    function fetchPostData() {
-        let pageNum = currentPage
-        if (currentPage <= Math.round(postsCount / PAGE_SIZE)) {
-            pageNum = pageNum + 1
-            setCurrentPage(pageNum)
-            fetchAllPosts()
-        }
-    } */
+    const [showImageModal, setShowImageModal] = useState(false)
+    const [rightImageIndex, setRightImageIndex] = useState()
+    const [leftImageIndex, setLeftImageIndex] = useState()
+    const [lastItemRight, setLastItemRight] = useState(false)
+    const [lastItemLeft, setLastItemLeft] = useState(false)
 
     const fetchAllPosts = async () => {
         try {
@@ -62,7 +46,7 @@ const Photos = () => {
         }
     }
 
-    const imgUrl = (post) => {
+    const postImgUrl = (post) => {
         const url = getImage(post?.imgId, post?.imgVersion)
         return post?.gifUrl ? post?.gifUrl : url
     }
@@ -74,6 +58,34 @@ const Photos = () => {
         )
     }
 
+
+
+    const onClickRight = () => {
+        setLastItemLeft(false)
+        setRightImageIndex((index) => index + 1)
+        const lastImage = posts[posts.length - 1]
+        const post = posts[rightImageIndex]
+        const imgUrl = post?.gifUrl ? post?.gifUrl : getImage(post?.imgId, post?.imgVersion)
+        setImgUrl(imgUrl)
+        setLeftImageIndex(rightImageIndex)
+        if (posts[rightImageIndex] === lastImage) {
+            setLastItemRight(true)
+        }
+    }
+    const onClickLeft = () => {
+        setLastItemRight(false)
+        setLeftImageIndex((index) => index - 1)
+        const firstImage = posts[0]
+        const post = posts[leftImageIndex - 1]
+        const imgUrl = post?.gifUrl ? post?.gifUrl : getImage(post?.imgId, post?.imgVersion)
+        setImgUrl(imgUrl)
+        setRightImageIndex(leftImageIndex)
+        if (firstImage === post) {
+            setLastItemLeft(true)
+        }
+
+    }
+
     useEffect(() => {
         getUserFollowings()
         fetchAllPosts()
@@ -82,6 +94,23 @@ const Photos = () => {
     return (
         <>
             <div className='photos-container' >
+                {showImageModal &&
+                    <ImageModal
+                        image={imgUrl}
+                        showArrow={true}
+                        onClickRight={() => onClickRight()}
+                        onClickLeft={() => onClickLeft()}
+                        lastItemLeft={lastItemLeft}
+                        lastItemRight={lastItemRight}
+                        onCancel={() => {
+                            setShowImageModal(!showImageModal)
+                            setRightImageIndex(0)
+                            setLeftImageIndex(0)
+                            setLastItemRight(false)
+                            setLastItemLeft(false)
+                        }}
+                    />
+                }
                 <div className="photos">Photos</div>
                 {posts.length &&
                     <div className="gallery-images">
@@ -100,8 +129,15 @@ const Photos = () => {
                                                 post={post}
                                                 showCaption={true}
                                                 showDelete={false}
-                                                imgSrc={imgUrl(post)}
-                                                onClick={() => { }}
+                                                imgSrc={postImgUrl(post)}
+                                                onClick={() => {
+                                                    setRightImageIndex(index + 1)
+                                                    setLeftImageIndex(index)
+                                                    setImgUrl(postImgUrl(post))
+                                                    setShowImageModal(!showImageModal)
+                                                    setLastItemLeft(index === 0)
+                                                    setLastItemRight(index + 1 === posts.length)
+                                                }}
                                             />
                                                 </>}
                                         </>}
