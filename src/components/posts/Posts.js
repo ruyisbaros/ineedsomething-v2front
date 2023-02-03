@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux';
 import Post from './single-post/Post';
-import { checkIfUserIsLocked, generateString } from '@services/utils/util.service';
+import { checkIfUserIsLocked } from '@services/utils/util.service';
 import { checkPostPrivacy } from '@services/utils/postutils.service';
 import "./Posts.scss"
 

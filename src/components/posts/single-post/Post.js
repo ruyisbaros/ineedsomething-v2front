@@ -4,7 +4,6 @@ import { FaPencilAlt, FaRegTrashAlt } from 'react-icons/fa';
 import moment from 'moment';
 import { find } from 'lodash';
 import { feelingsList, privacyList } from '@services/utils/static.data';
-
 import PostCommentSection from '../comments-section/PostCommentSection';
 import { useSelector } from 'react-redux';
 import ReactionsModal from '../reaction-modal/ReactionsModal';
@@ -13,8 +12,8 @@ import CommentInputBox from '../comments/CommentInputBox';
 import CommentsModal from './../comments-modal/CommentsModal';
 import { getImage } from '@services/utils/util.service';
 import ImageModal from './../../image/image-modal/ImageModal';
-import "./post.scss"
 import { getImageBackgroundColor } from '@services/utils/image.utils.service';
+import "./post.scss"
 
 const Post = ({ post, showIcons }) => {
 
