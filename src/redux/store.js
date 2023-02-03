@@ -1,5 +1,6 @@
 
 import { configureStore } from "@reduxjs/toolkit";
+import chatSlicer from "./chatSlicer";
 import currentUserSlicer from "./currentUserSlicer";
 import notificationSlicer from "./notificationSlicer";
 import postModalSlicer from "./postModalSlicer";
@@ -18,6 +19,7 @@ export const store = configureStore({
         modal: postModalSlicer,
         post: postSlicer,
         allPosts: postStream,
-        reactions: reactionsSlicers
+        reactions: reactionsSlicers,
+        chat: chatSlicer
     },
 });

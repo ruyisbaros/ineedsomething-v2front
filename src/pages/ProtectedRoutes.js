@@ -8,6 +8,7 @@ import { userLoggedSuccess } from '@redux/currentUserSlicer';
 import { clearCurrentUser } from '@services/utils/util.service';
 import { authService } from '@services/api/auth.service';
 import { Navigate, useNavigate } from 'react-router-dom';
+import { getConversationList } from '@services/api/chat.service';
 
 const ProtectedRoutes = ({ children }) => {
     const { currentUser, token } = useSelector(store => store.currentUser)
@@ -24,7 +25,7 @@ const ProtectedRoutes = ({ children }) => {
     const checkUser = useCallback(async () => {
         try {
             const res = await currentUserCheck()
-            console.log(res)
+            dispatch(getConversationList())
             setUserData(res.data.user)
             setIsTokenValid(true)
             dispatch(userLoggedSuccess({ currentUser: res.data.user, token: res.data.token }))
