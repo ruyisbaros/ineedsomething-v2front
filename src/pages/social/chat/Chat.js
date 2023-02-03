@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux';
-import "./chat.scss"
 import { getConversationList } from '@services/api/chat.service';
+import ChatList from '@components/chat/list/ChatList';
+import "./chat.scss"
 
 const Chat = () => {
     const { selectedChatUser, chatList } = useSelector(store => store.chat)
@@ -15,15 +16,15 @@ const Chat = () => {
         <div className='private-chat-wrapper'>
             <div className="private-chat-wrapper-content">
                 <div className="private-chat-wrapper-content-side">
-                    <div>Chat list</div>
+                    <ChatList />
                 </div>
                 <div className="private-chat-wrapper-content-conversation">
-                    {(selectedChatUser || chatList.length) && (
+                    {(selectedChatUser || chatList.length > 0) && (
                         <div>Chat Window</div>
                     )}
                     {!selectedChatUser && !chatList.length && (
                         <div className='no-chat'>
-                            Select or search users to chat with
+                            Select or search users for messaging
                         </div>
                     )}
                 </div>

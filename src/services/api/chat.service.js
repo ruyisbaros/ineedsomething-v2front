@@ -7,6 +7,9 @@ export async function getChatList() {
     return await axios.get("/chat/last_messages")
 }
 
+export async function removeChatUsers(body) {
+    return await axios.post("/chat/remove_users", body)
+}
 
 
 export const getConversationList = createAsyncThunk("conversation/getConversations", async (name, { dispatch }) => {
@@ -15,6 +18,5 @@ export const getConversationList = createAsyncThunk("conversation/getConversatio
         return res.data
     } catch (error) {
         toast.error(error.response.data.message)
-
     }
 })

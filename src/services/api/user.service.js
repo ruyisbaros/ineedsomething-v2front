@@ -10,6 +10,9 @@ export async function getAllUsers(page) {
     const res = await axios.get(`/user/get_all/${page}`)
     return res;
 }
+export async function searchChatUsers(query) {
+    return await axios.get(`/user/search_users/${query}`)
+}
 export async function currentUserCheck() {
     const res = await axios.get("/user/is_online")
     return res;
