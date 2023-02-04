@@ -143,3 +143,14 @@ export function removeUserFromList(list, userId) {
     }
     return list
 }
+
+export function checkUrl(url, word) {
+    return url.includes(word);
+}
+
+export function renameFile(element) {
+    const fileName = element.name.split('.').slice(0, -1).join('.');
+    const blob = element.slice(0, element.size, '/image/png');
+    const newFile = new File([blob], `${fileName}.png`, { type: '/image/png' });
+    return newFile;
+}

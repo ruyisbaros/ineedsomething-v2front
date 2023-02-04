@@ -10,6 +10,10 @@ export async function getAllUsers(page) {
     const res = await axios.get(`/user/get_all/${page}`)
     return res;
 }
+export async function getUserByUsername(userId, username, uId) {
+    const res = await axios.get(`/user/profile_posts/${userId}/${username}/${uId}`)
+    return res;
+}
 export async function searchChatUsers(query) {
     return await axios.get(`/user/search_users/${query}`)
 }
