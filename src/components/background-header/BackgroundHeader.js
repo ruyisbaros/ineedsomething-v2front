@@ -4,7 +4,7 @@ import { FaCamera } from 'react-icons/fa';
 import Avatar from '@components/avatar/Avatar';
 import Spinner from '@components/spinner/Spinner';
 import "./backgroundHeader.scss"
-import { generateString } from '@services/utils/util.service';
+
 import ImageGridModal from '@components/image-grid/ImageGridModal';
 import BackgroundHeaderSkeleton from './BackgroundHeaderSkeleton';
 

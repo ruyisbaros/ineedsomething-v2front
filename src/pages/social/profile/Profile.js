@@ -9,6 +9,13 @@ import { tabItems } from './../../../services/utils/static.data';
 import { filter } from 'lodash';
 import { toggleDeleteDialog } from '@redux/postModalSlicer';
 import { imageService } from '@services/api/image.service';
+import Timeline from '@components/timeline/Timeline';
+import FollowerCard from './../followers/FollowerCard';
+import GalleryImage from '@components/image/image-gallery/GalleryImage';
+import ChangePassword from '@components/change-password/ChangePassword';
+import NotificationSettings from '@components/notification-settings/NotificationSettings';
+import ImageModal from '@components/image/image-modal/ImageModal';
+import Dialog from '@components/dialog/Dialog';
 import "./profile.scss"
 
 
@@ -52,15 +59,13 @@ const Profile = () => {
         setHasError(false);
     };
 
-    const fetchUserProfileByUsername = useCallback(async () => {
+    const getUserProfileByUsername = useCallback(async () => {
         try {
             const response = await getUserByUsername(
                 searchParams.get('id'),
                 username,
                 searchParams.get('uId')
             );
-            console.log(response.data);
-
             setUser(response.data.user);
             setUserProfileData(response.data);
             setBgUrl(getImage(response.data.user?.bgImageId, response.data.user?.bgImageVersion));
@@ -97,13 +102,13 @@ const Profile = () => {
             const url = type === 'background' ? '/images/bg_img' : '/images/profile_img';
             const response = await imageService.addImage(url, result);
             if (response) {
-                toast.success(response.data.message)
+                toast.success(response.data.message);
                 setHasError(false);
                 setHasImage(false);
             }
         } catch (error) {
             setHasError(true);
-           toast.error(error?.response?.data?.message)
+            toast.error(error?.response?.data?.message)
         }
     };
 
@@ -113,38 +118,56 @@ const Profile = () => {
             await removeImage(`/images/delete_bg/${bgImageId}`);
         } catch (error) {
             setHasError(true);
-           toast.error(error?.response?.data?.message)
+            toast.error(error?.response?.data?.message)
         }
     };
 
     const removeImageFromGallery = async (imageId) => {
-         try {
-             dispatch(toggleDeleteDialog({ toggle: false, data: null }));
-             const images = filter(galleryImages, (image) => image._id !== imageId);
-             setGalleryImages(images);
-             await removeImage(`/images/delete/${imageId}`);
-         } catch (error) {
-             setHasError(true);
-             toast.error(error?.response?.data?.message)
-         }
-     };
+        try {
+            dispatch(toggleDeleteDialog({ toggle: false, data: null }));
+            const images = filter(galleryImages, (image) => image._id !== imageId);
+            setGalleryImages(images);
+            await removeImage(`/images/${imageId}`);
+        } catch (error) {
+            setHasError(true);
+            toast.error(error?.response?.data?.message)
+        }
+    };
 
     const removeImage = async (url) => {
         const response = await imageService.removeImage(url);
-        toast.success(response.data.message)  
+        toast.success(response.data.message);
     };
 
     useEffect(() => {
         if (rendered) {
-            fetchUserProfileByUsername();
+            getUserProfileByUsername();
             getUserImages();
         }
         if (!rendered) setRendered(true);
-    }, [rendered, fetchUserProfileByUsername, getUserImages]);
+    }, [rendered, getUserProfileByUsername, getUserImages]);
 
-
+    useEffect(() => {
+        console.log(displayContent)
+    }, [displayContent])
     return (
         <>
+            {showImageModal && (
+                <ImageModal image={imageUrl}
+                    onCancel={() => setShowImageModal(false)}
+                    showArrow={false}
+                />
+            )}
+            {deleteDialogIsOpen && (
+                <Dialog
+                    title="Are you sure you want to delete this image?"
+                    showButtons={true}
+                    firstButtonText="Delete"
+                    secondButtonText="Cancel"
+                    firstBtnHandler={() => removeImageFromGallery(data)}
+                    secondBtnHandler={() => dispatch(toggleDeleteDialog({ toggle: false, data: null }))}
+                />
+            )}
             <div className='profile-wrapper'>
                 <div className="profile-wrapper-container">
                     <div className="profile-header">
@@ -164,6 +187,41 @@ const Profile = () => {
                             hideSettings={username === currentUser?.username}
                             galleryImages={galleryImages}
                         />
+                    </div>
+                    <div className="profile-content">
+                        {displayContent === "timeline" && <Timeline userProfileData={userProfileData} loading={loading} />}
+                        {displayContent === "followers" && <FollowerCard />}
+                        {displayContent === "gallery" && (
+                            <>
+                                {galleryImages.length > 0 && (
+                                    <>
+                                        <div className='imageGrid-container'>
+                                            {
+                                                galleryImages.map(image => (
+                                                    <div key={image._id}>
+                                                        <GalleryImage
+                                                            showCaption={false}
+                                                            showDelete={true}
+                                                            imgSrc={getImage(image.imgId, image.imgVersion)}
+                                                            onClick={() => {
+                                                                setImageUrl(getImage(image.imgId, image.imgVersion))
+                                                                setShowImageModal(!showImageModal)
+                                                            }}
+                                                            onRemoveImage={(e) => {
+                                                                e.stopPropagation()
+                                                                dispatch(toggleDeleteDialog({ toggle: !deleteDialogIsOpen, data: image._id }))
+                                                            }}
+                                                        />
+                                                    </div>
+                                                ))
+                                            }
+                                        </div>
+                                    </>
+                                )}
+                            </>
+                        )}
+                        {displayContent === "change password" && <ChangePassword />}
+                        {displayContent === "notifications" && <NotificationSettings />}
                     </div>
                 </div>
             </div>
