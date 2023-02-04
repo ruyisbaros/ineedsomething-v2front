@@ -107,32 +107,32 @@ const Profile = () => {
         }
     }; */
 
-    /* const removeBackgroundImage = async (bgImageId) => {
+    const removeBackgroundImage = async (bgImageId) => {
         try {
             setBgUrl('');
-            await removeImage(`/images/background/${bgImageId}`);
+            await removeImage(`/images/delete_bg/${bgImageId}`);
         } catch (error) {
             setHasError(true);
            toast.error(error?.response?.data?.message)
         }
-    }; */
+    };
 
-    /*  const removeImageFromGallery = async (imageId) => {
+    const removeImageFromGallery = async (imageId) => {
          try {
              dispatch(toggleDeleteDialog({ toggle: false, data: null }));
              const images = filter(galleryImages, (image) => image._id !== imageId);
              setGalleryImages(images);
-             await removeImage(`/images/${imageId}`);
+             await removeImage(`/images/delete/${imageId}`);
          } catch (error) {
              setHasError(true);
              toast.error(error?.response?.data?.message)
          }
-     }; */
+     };
 
-    /* const removeImage = async (url) => {
-        const response = await removeImage(url);
+    const removeImage = async (url) => {
+        const response = await imageService.removeImage(url);
         
-    }; */
+    };
 
     useEffect(() => {
         if (rendered) {
@@ -158,7 +158,7 @@ const Profile = () => {
                             selectedFileImage={selectedFileImage}
                             //saveImage={saveImage}
                             cancelFileSelection={cancelFileSelection}
-                            //removeBackgroundImage={removeBackgroundImage}
+                            removeBackgroundImage={removeBackgroundImage}
                             tabItems={tabItems(username === currentUser?.username, username === currentUser?.username)}
                             tab={displayContent}
                             hideSettings={username === currentUser?.username}

@@ -6,6 +6,7 @@ import Spinner from '@components/spinner/Spinner';
 import "./backgroundHeader.scss"
 import { generateString } from '@services/utils/util.service';
 import ImageGridModal from '@components/image-grid/ImageGridModal';
+import BackgroundHeaderSkeleton from './BackgroundHeaderSkeleton';
 
 const BackgroundHeader = ({
     user,
@@ -46,26 +47,28 @@ const BackgroundHeader = ({
 
     const onAddProfileClick = () => setIsActive(!isActive);
 
-    const backgroundSelectDropdown = () => {
+    const BackgroundSelectDropdown = () => {
         return (
-            <nav className='menu'>
+            <nav className="menu" data-testid="menu">
                 <ul>
-                    {
-                        galleryImages.length &&
-                        <li onClick={() => {
-                            setShowImagesModal(true)
-                            setIsActive(false)
-                        }}>
-                            <div className='item'>Select</div>
-                        </li >
-
-                    }
-                    <li onClick={() => {
-                        backgroundFileInputClicked()
-                        setIsActive(false)
-                        setShowImagesModal(false)
-                    }}>
-                        <div className='item'>Select</div>
+                    {galleryImages.length > 0 && (
+                        <li
+                            onClick={() => {
+                                setShowImagesModal(true);
+                                setIsActive(false);
+                            }}
+                        >
+                            <div className="item">Select</div>
+                        </li>
+                    )}
+                    <li
+                        onClick={() => {
+                            backgroundFileInputClicked();
+                            setIsActive(false);
+                            setShowImagesModal(false);
+                        }}
+                    >
+                        <div className="item">Upload</div>
                     </li>
                 </ul>
             </nav>
@@ -88,8 +91,9 @@ const BackgroundHeader = ({
                     selectedFileImage(e, "background")
                 }}
             />}
+            {loading && <BackgroundHeaderSkeleton tabItems={tabItems} />}
             <div className="profile-banner" data-testid="profile-banner">
-                {hasImage && <div className="save-changes-container" data-testid="save-changes-container">
+                {hasImage && <div className="save-changes-container" >
                     <div className="save-changes-box">
                         <div className="spinner-container">
                             {showSpinner && !hasError && <Spinner bgColor="white" />}
@@ -119,15 +123,21 @@ const BackgroundHeader = ({
                         </div>
                     </div>
                 </div>}
-                <div data-testid="profile-banner-image" className="profile-banner-image">
-                    <div className="delete-btn" data-testid="delete-btn">
-                        <Button label="Remove" className="remove" disabled={false} />
-                    </div>
-                    <h3>Add a background image</h3>
-                    <img src="" alt="" />
+                <div className="profile-banner-image"
+                    style={{ background: `${!selectedBackground ? user?.avatarColor : ""}` }}>
+                    {url && hideSettings && <div className="delete-btn" data-testid="delete-btn">
+                        <Button label="Remove" className="remove" disabled={false}
+                            handleClick={() => {
+                                removeBackgroundImage(user?.bgImageId)
+                            }}
+                        />
+                    </div>}
+                    {!url && !selectedBackground && <h3>Add a background image</h3>}
+                    {selectedBackground ? <img src={`${selectedBackground}`} alt="" /> : <img src={`${url}`} alt="" />}
                 </div>
                 <div className="profile-banner-data">
                     <div data-testid="profile-pic" className="profile-pic"
+                        style={{ width: `${user?.profilePicture ? "180px" : ""}` }}
                     >
                         <Avatar
                             name={user?.username}
@@ -136,32 +146,68 @@ const BackgroundHeader = ({
                             ize={180}
                             round={true}
                             avatarSrc={selectedProfileImage || user?.profilePicture} />
-                        <div className="profile-pic-select" data-testid="profile-pic-select">
-                            <Input type="file" className="inputFile" />
-                            <label>
+                        {hideSettings &&
+                            <div className="profile-pic-select" >
+                                <Input
+                                    name="profile"
+                                    ref={profileImageRef}
+                                    type="file"
+                                    className="inputFile"
+                                    onClick={() => {
+                                        if (profileImageRef.current) {
+                                            profileImageRef.current.value = null
+                                        }
+                                    }}
+                                    handleChange={(e) => {
+                                        setSelectedProfileImage(URL.createObjectURL(e.target.files[0]))
+                                        selectedFileImage(e.target.files[0], "profile")
+                                    }}
+                                />
+                                <label onClick={() => profileFileInputClicked()}>
                                 <FaCamera className="camera" />
                             </label>
-                        </div>
+                            </div>}
                     </div>
-                    <div className="profile-name">Danny</div>
-                    <div className="profile-select-image">
-                        <Input type="file" className="inputFile" />
-                        <label data-testid="add-cover-photo">
+                    <div className="profile-name">{user?.username}</div>
+                    {hideSettings && <div className="profile-select-image">
+                        <Input
+                            ref={backgroundFileRef}
+                            name="background"
+                            type="file"
+                            className="inputFile"
+                            onClick={() => {
+                                if (backgroundFileRef.current) {
+                                    backgroundFileRef.current.value = null;
+                                }
+                            }}
+                            handleChange={(event) => {
+                                setSelectedBackground(URL.createObjectURL(event.target.files[0]));
+                                selectedFileImage(event.target.files[0], 'background');
+                            }}
+                        />
+                        <label onClick={() => onAddProfileClick()}>
                             <FaCamera className="camera" /> <span>Add Cover Photo</span>
                         </label>
-                        Background select dropdown
-                    </div>
+                        {isActive && <BackgroundSelectDropdown />}
+                    </div>}
                 </div>
                 <div className="profile-banner-items">
                     <ul className="banner-nav">
-                        <div data-testid="tab-elements">
-                            <li className="banner-nav-item">
-                                <div className="banner-nav-item-name">
-                                    Icon
-                                    <p className="title">Item</p>
-                                </div>
-                            </li>
-                        </div>
+                        {tabItems.map((data) => (
+                            <div data-testid="tab-elements" key={data.key}>
+                                {data.show && (
+                                    <li className="banner-nav-item" key={data.key}>
+                                        <div
+                                            className={`banner-nav-item-name ${tab === data.key.toLowerCase() ? 'active' : ''}`}
+                                            onClick={() => onClick(data.key.toLowerCase())}
+                                        >
+                                            {data.icon}
+                                            <p className="title">{data.key}</p>
+                                        </div>
+                                    </li>
+                                )}
+                            </div>
+                        ))}
                     </ul>
                 </div>
             </div>
