@@ -11,6 +11,14 @@ export async function removeChatUsers(body) {
     return await axios.post("/chat/remove_users", body)
 }
 
+export async function addChatUsers(body) {
+    return await axios.post("/chat/add_users", body)
+}
+
+export async function markMessagesAsRead(senderId, receiverId) {
+    return await axios.put("/chat/mark_read", { senderId, receiverId })
+}
+
 
 export const getConversationList = createAsyncThunk("conversation/getConversations", async (name, { dispatch }) => {
     try {
