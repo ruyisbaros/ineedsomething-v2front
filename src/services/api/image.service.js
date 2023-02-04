@@ -6,12 +6,6 @@ class ImageService {
         return response;
     }
 
-    /* 
-    router.post("/profile_img", protect, validatePostWithImage, imageCtrl.addProfileImage);
-router.post("/bg_img", protect, validatePostWithImage, imageCtrl.addBackgroundImage);
-router.delete("/delete/:imageId", protect, imageCtrl.deleteAnyImage);
-router.delete("/delete_bg/:bgImageId", protect, imageCtrl.deleteBgImage);
-router.get("/get/:userId", protect, imageCtrl.getUserImages); */
     async addImage(url, data) {
         const response = await axios.post(url, { image: data });
         return response;
@@ -24,3 +18,11 @@ router.get("/get/:userId", protect, imageCtrl.getUserImages); */
 }
 
 export const imageService = new ImageService();
+
+/*
+   router.post("/profile_img", protect, validatePostWithImage, imageCtrl.addProfileImage);
+   router.post("/bg_img", protect, validatePostWithImage, imageCtrl.addBackgroundImage);
+   router.delete("/delete/:imageId", protect, imageCtrl.deleteAnyImage);
+   router.delete("/delete_bg/:bgImageId", protect, imageCtrl.deleteBgImage);
+   router.get("/get/:userId", protect, imageCtrl.getUserImages);
+ */

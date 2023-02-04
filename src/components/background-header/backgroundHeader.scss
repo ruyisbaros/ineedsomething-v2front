@@ -258,11 +258,15 @@
             .save-changes-buttons {
                 grid-area: buttons;
                 text-align: right;
+                
 
                 &-bg {
                     padding: 4px;
+                    padding-right: 6rem;
                     height: 44px;
                     line-height: 44px;
+                    display: flex;
+                        justify-content: flex-end;
 
                     .cancel {
                         padding: 0 12px;
@@ -307,6 +311,23 @@
     }
 }
 
+@media (max-width:1300px) {
+    .profile-banner {
+        .profile-banner-image {
+            height: 250px;
+            margin-top: 1rem;
+        }
+    }
+
+    .profile-banner {
+
+        .save-changes-buttons-bg {
+
+            margin-right: 18rem;
+        }
+
+    }
+}
 @media only screen and (max-width: 768px) {
     .profile-banner-data {
         .profile-name {

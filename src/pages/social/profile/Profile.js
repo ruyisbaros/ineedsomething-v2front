@@ -3,7 +3,7 @@ import BackgroundHeader from '@components/background-header/BackgroundHeader'
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { getImage } from '@services/utils/util.service';
+import { getImage, renameFile } from '@services/utils/util.service';
 import { getUserByUsername } from '@services/api/user.service';
 import { tabItems } from './../../../services/utils/static.data';
 import { filter } from 'lodash';
@@ -79,25 +79,25 @@ const Profile = () => {
         }
     }, [searchParams]);
 
-    /* const saveImage = (type) => {
+    const saveImage = (type) => {
         const reader = new FileReader();
         reader.addEventListener('load', async () => addImage(reader.result, type), false);
 
         if (selectedBackgroundImage && typeof selectedBackgroundImage !== 'string') {
-            reader.readAsDataURL(Utils.renameFile(selectedBackgroundImage));
+            reader.readAsDataURL(renameFile(selectedBackgroundImage));
         } else if (selectedProfileImage && typeof selectedProfileImage !== 'string') {
-            reader.readAsDataURL(Utils.renameFile(selectedProfileImage));
+            reader.readAsDataURL(renameFile(selectedProfileImage));
         } else {
             addImage(selectedBackgroundImage, type);
         }
-    }; */
+    };
 
-    /* const addImageFunc = async (result, type) => {
+    const addImage = async (result, type) => {
         try {
-            const url = type === 'background' ? '/images/background' : '/images/profile';
-            const response = await addImage(url, result);
+            const url = type === 'background' ? '/images/bg_img' : '/images/profile_img';
+            const response = await imageService.addImage(url, result);
             if (response) {
-                
+                toast.success(response.data.message)
                 setHasError(false);
                 setHasImage(false);
             }
@@ -105,7 +105,7 @@ const Profile = () => {
             setHasError(true);
            toast.error(error?.response?.data?.message)
         }
-    }; */
+    };
 
     const removeBackgroundImage = async (bgImageId) => {
         try {
@@ -131,7 +131,7 @@ const Profile = () => {
 
     const removeImage = async (url) => {
         const response = await imageService.removeImage(url);
-        
+        toast.success(response.data.message)  
     };
 
     useEffect(() => {
@@ -156,7 +156,7 @@ const Profile = () => {
                             url={bgUrl}
                             onClick={changeTabContent}
                             selectedFileImage={selectedFileImage}
-                            //saveImage={saveImage}
+                            saveImage={saveImage}
                             cancelFileSelection={cancelFileSelection}
                             removeBackgroundImage={removeBackgroundImage}
                             tabItems={tabItems(username === currentUser?.username, username === currentUser?.username)}
