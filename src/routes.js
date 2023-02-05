@@ -9,6 +9,7 @@ import ResetPassword from "@pages/auth/ResetPassword";
 import NotificationSkeleton from "@pages/social/notifications/NotificationSkeleton"
 import CardSkeleton from "@pages/social/people/CardSkeleton"
 import PhotoSkeleton from "@pages/social/photos/PhotosSkeleton"
+import ProfileSkeleton from "@pages/social/profile/ProfileSkeleton"
 
 const Social = lazy(() => import("@pages/social/Social"))
 const Chat = lazy(() => import("@pages/social/chat/Chat"))
@@ -102,7 +103,7 @@ export const Routers = () => {
                 {
                     path: "profile/:username",
                     element: (
-                        <Suspense>
+                        <Suspense fallback={<ProfileSkeleton />}>
                             <Profile />
                         </Suspense>
                     )

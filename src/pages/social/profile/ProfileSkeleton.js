@@ -1,6 +1,6 @@
 import React from 'react'
-import { PostFormSkeleton } from '@components/posts/post-form/PostFormSkeleton';
-import { PostSkeleton } from '@components/posts/PostSkeleton';
+import PostFormSkeleton from '@components/posts/post-form/PostFormSkeleton';
+import PostSkeleton from '@components/posts/PostSkeleton';
 import { tabItems } from '@services/utils/static.data';
 import BackgroundHeaderSkeleton from '@components/background-header/BackgroundHeaderSkeleton';
 

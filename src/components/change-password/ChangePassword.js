@@ -8,8 +8,8 @@ import { authService } from '@services/api/auth.service';
 import { clearCurrentUser } from '@services/utils/util.service';
 import { useDispatch } from 'react-redux';
 import { changePassword } from '@services/api/user.service';
-import "./changePassword.scss"
 import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa';
+import "./changePassword.scss"
 
 const ChangePassword = () => {
     const [currentPassword, setCurrentPassword] = useState('');
