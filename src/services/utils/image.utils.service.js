@@ -32,31 +32,26 @@ export async function readImageAsBase64(file) {
 }
 
 //Get image background color
-export async function getImageBackgroundColor(imgUrl) {
-    const image = new Image()
-    image.crossOrigin = "Anonymous"
-
-    const imageBackgroundColor = new Promise((resolve, reject) => {
+export function getImageBackgroundColor(imageUrl) {
+    const image = new Image();
+    image.crossOrigin = 'Anonymous';
+    const backgroundImageColor = new Promise((resolve, reject) => {
         image.addEventListener('load', () => {
-            const canvas = document.createElement("canvas")
-            const context = canvas.getContext("2d")
-            canvas.width = image.width
-            canvas.height = image.height
-            context.drawImage(image, 0, 0)
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            canvas.width = image.width;
+            canvas.height = image.height;
+            context.drawImage(image, 0, 0);
 
-            const imageData = context.getImageData(0, 0, canvas.width, canvas.height)
-            const params = imageData.data
-            const bgColor = convertRGBToHex(params[0], params[1], params[2])
+            const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+            const params = imageData.data;
+            const bgColor = convertRGBToHex(params[0], params[1], params[2]);
             resolve(bgColor);
         });
 
-        image.addEventListener('error', (event) => {
-            reject(event);
-        });
-
-        image.src = imgUrl
+        image.src = imageUrl;
     });
-    return imageBackgroundColor
+    return backgroundImageColor;
 }
 
 function convertRGBToHex(red, green, blue) {

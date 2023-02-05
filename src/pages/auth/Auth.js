@@ -6,6 +6,7 @@ import Register from './Register';
 import useLocalStorage from '@hooks/useLocalStorage';
 import { useNavigate } from 'react-router-dom';
 import { appEnvironment } from '@services/utils/util.service';
+import PageLoader from '@components/page-loader/PageLoader';
 
 
 
@@ -24,6 +25,7 @@ const Auth = () => {
 
     return (
         <>
+            {keepLoggedIn && <PageLoader />}
             <div className="container-wrapper" style={{ backgroundImage: `url(${bgImage})` }}>
                 <div className="environment">{environment}</div>
                 <div className="container-wrapper-auth">

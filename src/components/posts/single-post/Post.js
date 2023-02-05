@@ -33,14 +33,14 @@ const Post = ({ post, showIcons }) => {
         return privacy?.icon
     }
 
-    const backgroundImgColor = async (post) => {
+    const backgroundImgColor = (post) => {
         let imgUrl = ""
         if (post?.imgId && !post?.gifUrl && post.bgColor === '#ffffff') {
             imgUrl = getImage(post?.imgId, post?.imgVersion)
         } else if (post?.gifUrl && post.bgColor === '#ffffff') {
             imgUrl = post?.gifUrl
         }
-        const bgColor = await getImageBackgroundColor(imgUrl)
+        const bgColor = getImageBackgroundColor(imgUrl)
         setBackgroundImageColor(bgColor)
     }
 

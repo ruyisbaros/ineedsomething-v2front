@@ -2,7 +2,7 @@ import React from 'react'
 import "./avatar.scss"
 
 const Avatar = ({ avatarSrc, name, bgColor = "#f33e58", textColor, size, round = true }) => {
-
+    //console.log(name)
     const textSizeRatio = 1.7
     const fontSize = Math.floor(size / textSizeRatio)
     const firstChar = name?.charAt(0)
