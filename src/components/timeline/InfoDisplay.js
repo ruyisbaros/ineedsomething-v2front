@@ -11,6 +11,7 @@ import {
 import ContentEditable from 'react-contenteditable';
 import BasicInfoSkeleton from './BasicInfoSkeleton';
 import "./timeline.scss"
+import { Button } from '@components/index';
 
 const InfoDisplay = ({
     title,
@@ -177,6 +178,20 @@ const InfoDisplay = ({
                         </div>
                     </div>
                 )}
+                {isCurrentUser && (
+                    <div className='intro-submit-button'>
+                        <Button
+                            label="Update"
+                            className="button updateBtn"
+                            disabled={editIntroBtn}
+                            handleClick={() => {
+                                setEditIntroBtn(true)
+                                updateInfo()
+                            }}
+                        />
+                    </div>
+                )}
+
             </div>
         </>
     )

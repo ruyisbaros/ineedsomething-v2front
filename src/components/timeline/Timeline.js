@@ -5,12 +5,14 @@ import { useSelector } from 'react-redux';
 import { checkIfUserIsLocked } from '@services/utils/util.service';
 import { checkPostPrivacy, socketIOPost } from '@services/utils/postutils.service';
 import Post from '@components/posts/single-post/Post';
-import "./timeline.scss"
 import { useParams } from 'react-router-dom';
 import PostForm from '@components/posts/post-form/PostForm';
 import { getFollowings } from '@services/api/follower.service';
 import { toast } from 'react-toastify';
 import CountContainer from './CountContainer';
+import "./timeline.scss"
+import BasicInfo from './BasicInfo';
+import SocialLinks from './SocialLinks';
 
 const Timeline = ({ userProfileData, loading }) => {
     const { currentUser } = useSelector(store => store.currentUser)
@@ -18,6 +20,18 @@ const Timeline = ({ userProfileData, loading }) => {
     const [user, setUser] = useState()
     const [followings, setFollowings] = useState([])
     const { username } = useParams()
+    const [editableInputs, setEditableInputs] = useState({
+        quote: '',
+        work: '',
+        school: '',
+        location: ''
+    });
+    const [editableSocialInputs, setEditableSocialInputs] = useState({
+        instagram: '',
+        twitter: '',
+        facebook: '',
+        youtube: ''
+    });
 
     console.log(userProfileData)
 
@@ -56,6 +70,24 @@ const Timeline = ({ userProfileData, loading }) => {
                             loading={loading}
                             followersCount={user?.followersCount}
                             followingCount={user?.followingCount}
+                        />
+                    </div>
+                    <div className='side-content'>
+                        <BasicInfo
+                            setEditableInputs={setEditableInputs}
+                            editableInputs={editableInputs}
+                            username={username}
+                            profile={currentUser}
+                            loading={loading}
+                        />
+                    </div>
+                    <div className="side-content social">
+                        <SocialLinks
+                            setEditableSocialInputs={setEditableSocialInputs}
+                            editableSocialInputs={editableSocialInputs}
+                            username={username}
+                            profile={currentUser}
+                            loading={loading}
                         />
                     </div>
                 </div>
