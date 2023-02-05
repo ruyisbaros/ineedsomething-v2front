@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import PostFormSkeleton from '@components/posts/post-form/PostFormSkeleton'
 import PostSkeleton from '@components/posts/PostSkeleton'
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { checkIfUserIsLocked } from '@services/utils/util.service';
 import { checkPostPrivacy, socketIOPost } from '@services/utils/postutils.service';
 import Post from '@components/posts/single-post/Post';
@@ -12,14 +12,19 @@ import { toast } from 'react-toastify';
 import CountContainer from './CountContainer';
 import BasicInfo from './BasicInfo';
 import SocialLinks from './SocialLinks';
+import useLocalStorage from '@hooks/useLocalStorage';
+import { getReactionsByUsername } from '@services/api/reaction.service';
+import { addReaction } from '@redux/reactionsSlicers';
 import "./timeline.scss"
 
 const Timeline = ({ userProfileData, loading }) => {
     const { currentUser } = useSelector(store => store.currentUser)
+    const dispatch = useDispatch()
     const [posts, setPosts] = useState([])
     const [user, setUser] = useState()
     const [followings, setFollowings] = useState([])
     const { username } = useParams()
+    const storedUsername = useLocalStorage("username", "get")
     const [editableInputs, setEditableInputs] = useState({
         quote: '',
         work: '',
@@ -49,6 +54,16 @@ const Timeline = ({ userProfileData, loading }) => {
         }
     }
 
+    const getUserReactions = useCallback(async () => {
+        try {
+            const res = await getReactionsByUsername(storedUsername)
+            console.log(res);
+            dispatch(addReaction(res.data.reactions))
+        } catch (error) {
+            toast.error(error?.response?.data?.message)
+        }
+    }, [storedUsername, dispatch])
+
     useEffect(() => {
         setUser(userProfileData?.user)
         setEditableInputs({
@@ -62,7 +77,17 @@ const Timeline = ({ userProfileData, loading }) => {
 
     useEffect(() => {
         getUserFollowings()
-    }, [])
+        getUserReactions()
+    }, [getUserReactions])
+
+    useEffect(() => {
+        if (username !== currentUser?.username) {
+            const firstPost = document.querySelectorAll(".post-body")[0]
+            if (firstPost) {
+                firstPost.style.marginTop = "0"
+            }
+        }
+    }, [username, currentUser])
 
     useEffect(() => {
         socketIOPost(posts, setPosts)

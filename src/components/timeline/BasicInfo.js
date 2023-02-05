@@ -1,5 +1,5 @@
 import React from 'react'
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import "./timeline.scss"
 import { toast } from 'react-toastify';
 import { updateUsersBasicInfo } from '@services/api/user.service';
@@ -8,7 +8,7 @@ import InfoDisplay from './InfoDisplay';
 
 const BasicInfo = ({ editableInputs, username, profile, loading, setEditableInputs }) => {
     const { currentUser } = useSelector(store => store.currentUser)
-    const dispatch = useDispatch();
+    //const dispatch = useDispatch();
     const noBasicInfo = {
         quoteMsg: 'No information',
         workMsg: 'No information',

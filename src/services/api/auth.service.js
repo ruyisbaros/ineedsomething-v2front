@@ -22,7 +22,6 @@ class AuthService {
         return res;
     }
 
-
     async logout() {
         const res = await axios.get("/auth/logout")
         return res;
