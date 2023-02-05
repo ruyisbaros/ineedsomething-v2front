@@ -1,10 +1,111 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
+import PostFormSkeleton from '@components/posts/post-form/PostFormSkeleton'
+import PostSkeleton from '@components/posts/PostSkeleton'
+import { useSelector } from 'react-redux';
+import { checkIfUserIsLocked } from '@services/utils/util.service';
+import { checkPostPrivacy, socketIOPost } from '@services/utils/postutils.service';
+import Post from '@components/posts/single-post/Post';
 import "./timeline.scss"
+import { useParams } from 'react-router-dom';
+import PostForm from '@components/posts/post-form/PostForm';
+import { getFollowings } from '@services/api/follower.service';
+import { toast } from 'react-toastify';
+import CountContainer from './CountContainer';
 
 const Timeline = ({ userProfileData, loading }) => {
+    const { currentUser } = useSelector(store => store.currentUser)
+    const [posts, setPosts] = useState([])
+    const [user, setUser] = useState()
+    const [followings, setFollowings] = useState([])
+    const { username } = useParams()
+
+    console.log(userProfileData)
+
+    useEffect(() => {
+        setPosts(userProfileData?.posts)
+    }, [userProfileData])
+
+    const getUserFollowings = async () => {
+        try {
+            const res = await getFollowings()
+            console.log(res);
+            setFollowings(res.data.followings)
+        } catch (error) {
+            toast.error(error?.response?.data?.message)
+        }
+    }
+
+    useEffect(() => {
+        setUser(userProfileData?.user)
+    }, [userProfileData])
+
+    useEffect(() => {
+        getUserFollowings()
+    }, [])
+
+    useEffect(() => {
+        socketIOPost(posts, setPosts)
+    }, [posts])
+
     return (
-        <div>
-            Timeline
+        <div className='timeline-wrapper'>
+            <div className="timeline-wrapper-container">
+                <div className="timeline-wrapper-container-side">
+                    <div className="timeline-wrapper-container-side-count">
+                        <CountContainer
+                            loading={loading}
+                            followersCount={user?.followersCount}
+                            followingCount={user?.followingCount}
+                        />
+                    </div>
+                </div>
+                {loading && posts?.length < 0 && (
+                    <div className="timeline-wrapper-container-main">
+                        <div style={{ marginBottom: "10px" }}>
+                            <PostFormSkeleton />
+                        </div>
+                        <>
+                            {
+                                [1, 2, 3, 4, 5].map(index => (
+                                    <div key={index}>
+                                        <PostSkeleton />
+                                    </div>
+                                ))
+                            }
+                        </>
+                    </div>
+                )}
+
+                {!loading && posts?.length > 0 && (
+                    <div className="timeline-wrapper-container-main">
+                        {username === currentUser?.username && (
+                            <PostForm />
+                        )}
+                        {
+                            currentUser && posts?.map(post => (
+                                <div key={post._id}>
+                                    {(!checkIfUserIsLocked(currentUser?.blockedBy, post?.userId, currentUser._id) || post?.userId === currentUser?._id)
+
+                                        &&
+                                        <>
+                                            {checkPostPrivacy(post, currentUser, followings) &&
+                                                <>
+                                                    <Post post={post} showIcons={username === currentUser?.username} />
+                                                </>}
+                                        </>}
+                                </div>
+                            ))
+                        }
+                    </div>
+                )}
+                {!loading && posts?.length === 0 && (
+                    <div className="timeline-wrapper-container-main">
+                        <div className='empty-page'>
+                            No post to display!..
+                        </div>
+                    </div>
+                )}
+            </div>
         </div>
     )
 }

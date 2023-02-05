@@ -38,6 +38,7 @@ const Profile = () => {
     const dispatch = useDispatch();
     const { username } = useParams();
     const [searchParams] = useSearchParams();
+    //console.log(username);
 
     const changeTabContent = (data) => {
         setDisplayContent(data);
@@ -190,7 +191,7 @@ const Profile = () => {
                     </div>
                     <div className="profile-content">
                         {displayContent === "timeline" && <Timeline userProfileData={userProfileData} loading={loading} />}
-                        {displayContent === "followers" && <FollowerCard />}
+                        {displayContent === "followers" && <FollowerCard userData={user} />}
                         {displayContent === "gallery" && (
                             <>
                                 {galleryImages.length > 0 && (

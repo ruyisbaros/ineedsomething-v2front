@@ -22,7 +22,7 @@ const Posts = ({ allPosts, userFollowings, postsLoading }) => {
         <div className='posts-container'>
             {
                 currentUser && posts?.map(post => (
-                    <div >
+                    <div key={post._id}>
                         {(!checkIfUserIsLocked(currentUser?.blockedBy, post?.userId, currentUser._id) || post?.userId === currentUser?._id)
 
                             &&
