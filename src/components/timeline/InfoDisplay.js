@@ -75,7 +75,7 @@ const InfoDisplay = ({
                             className='icon instagram' />}
                     </div>
                     <div className="side-container-body-content">
-                        {type === "basic" && editIntroBtn && work && <>Works at</>}
+                        {type === "basic" && editIntroBtn && work && <>Works at </>}
                         {type === "basic" && editIntroBtn && !work && <div className='no-information'>{workMsg}</div>}
                         {type !== "basic" && editIntroBtn && instagram && (
                             <a href={instagram} className='link' target="_blank" rel="noopener noreferrer">{instagram}</a>
@@ -103,7 +103,7 @@ const InfoDisplay = ({
                             className='icon twitter' />}
                     </div>
                     <div className="side-container-body-content">
-                        {type === "basic" && editIntroBtn && school && <>Went to</>}
+                        {type === "basic" && editIntroBtn && school && <>Went to </>}
                         {type === "basic" && editIntroBtn && !school && <div className='no-information'>{schoolMsg}</div>}
                         {type !== "basic" && editIntroBtn && twitter && (
                             <a href={twitter} className='link' target="_blank" rel="noopener noreferrer">{twitter}</a>
@@ -131,7 +131,7 @@ const InfoDisplay = ({
                             className='icon facebook' />}
                     </div>
                     <div className="side-container-body-content">
-                        {type === "basic" && editIntroBtn && location && <>Lives in</>}
+                        {type === "basic" && editIntroBtn && location && <>Lives in </>}
                         {type === "basic" && editIntroBtn && !location && <div className='no-information'>{locationMsg}</div>}
                         {type !== "basic" && editIntroBtn && facebook && (
                             <a href={facebook} className='link' target="_blank" rel="noopener noreferrer">{facebook}</a>

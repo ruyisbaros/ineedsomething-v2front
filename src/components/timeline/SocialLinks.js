@@ -1,12 +1,12 @@
 import { updateUsersSocialLinks } from '@services/api/user.service';
 import React from 'react'
 import { toast } from 'react-toastify';
-import { useDispatch } from 'react-redux';
+//import { useDispatch } from 'react-redux';
 import InfoDisplay from './InfoDisplay';
 import BasicInfoSkeleton from './BasicInfoSkeleton';
 
 const SocialLinks = ({ editableSocialInputs, username, profile, loading, setEditableSocialInputs }) => {
-    const dispatch = useDispatch();
+    //const dispatch = useDispatch();
     const noBasicInfo = {
         quoteMsg: '',
         workMsg: '',

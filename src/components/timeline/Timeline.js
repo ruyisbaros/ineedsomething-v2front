@@ -10,9 +10,9 @@ import PostForm from '@components/posts/post-form/PostForm';
 import { getFollowings } from '@services/api/follower.service';
 import { toast } from 'react-toastify';
 import CountContainer from './CountContainer';
-import "./timeline.scss"
 import BasicInfo from './BasicInfo';
 import SocialLinks from './SocialLinks';
+import "./timeline.scss"
 
 const Timeline = ({ userProfileData, loading }) => {
     const { currentUser } = useSelector(store => store.currentUser)
@@ -51,6 +51,13 @@ const Timeline = ({ userProfileData, loading }) => {
 
     useEffect(() => {
         setUser(userProfileData?.user)
+        setEditableInputs({
+            quote: userProfileData?.user?.quote,
+            work: userProfileData?.user?.work,
+            school: userProfileData?.user?.school,
+            location: userProfileData?.user?.location
+        })
+        setEditableSocialInputs(userProfileData?.user?.social)
     }, [userProfileData])
 
     useEffect(() => {
