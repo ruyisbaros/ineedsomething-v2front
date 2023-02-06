@@ -3,6 +3,7 @@ import { findIndex, floor, random, some } from "lodash"
 import { authLogout, userLoggedSuccess } from "@redux/currentUserSlicer"
 import { addNotification, clearNotification } from "@redux/notificationSlicer"
 import millify from "millify"
+import { APP_ENVIRONMENT } from "@services/axios"
 
 export function createAvatarColor() {
     return avatarColors[floor(random(0.9) * avatarColors.length)]
@@ -48,8 +49,8 @@ export function dispatchClearNotifications(dispatch) {
 }
 
 export function appEnvironment() {
-    const env = process.env.REACT_APP_ENVIRONMENT
-    if (env === "development") {
+    const env = APP_ENVIRONMENT
+    if (env === "local") {
         return "DEV"
     } else if (env === "staging") {
         return "STG"
