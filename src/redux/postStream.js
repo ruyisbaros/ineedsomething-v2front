@@ -22,7 +22,7 @@ const allPostsSlicer = createSlice({
         })
         builder.addCase(getPosts.fulfilled, (state, action) => {
             state.isLoading = false
-            state.posts = [...action.payload.posts]
+            state.posts = [...action?.payload?.posts]
             state.totalPostsCount = action.payload.totalPosts
         })
         builder.addCase(getPosts.rejected, (state) => {

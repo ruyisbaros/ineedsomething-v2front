@@ -27,6 +27,7 @@ const ProtectedRoutes = ({ children }) => {
             const res = await currentUserCheck()
             dispatch(getConversationList())
             setUserData(res.data.user)
+            console.log(res.data.user)
             setIsTokenValid(true)
             dispatch(userLoggedSuccess({ currentUser: res.data.user, token: res.data.token }))
         } catch (error) {

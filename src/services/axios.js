@@ -3,7 +3,7 @@ import axios from 'axios';
 export let BASE_ENDPOINT = '';
 
 // when developing locally, change this value to local
-export const APP_ENVIRONMENT = 'development';
+export const APP_ENVIRONMENT = 'local';
 
 if (APP_ENVIRONMENT === 'local') {
     BASE_ENDPOINT = 'http://localhost:5000';
@@ -16,6 +16,7 @@ if (APP_ENVIRONMENT === 'local') {
 }
 
 const BASE_URL = `${BASE_ENDPOINT}/api/v1`;
+console.log(BASE_ENDPOINT)
 
 export default axios.create({
     baseURL: BASE_URL,

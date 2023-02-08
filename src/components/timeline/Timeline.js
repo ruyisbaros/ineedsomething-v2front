@@ -55,12 +55,14 @@ const Timeline = ({ userProfileData, loading }) => {
     }
 
     const getUserReactions = useCallback(async () => {
-        try {
-            const res = await getReactionsByUsername(storedUsername)
-            console.log(res);
-            dispatch(addReaction(res.data.reactions))
-        } catch (error) {
-            toast.error(error?.response?.data?.message)
+        if (storedUsername) {
+            try {
+                const res = await getReactionsByUsername(storedUsername)
+                console.log(res);
+                dispatch(addReaction(res.data.reactions))
+            } catch (error) {
+                toast.error(error?.response?.data?.message)
+            }
         }
     }, [storedUsername, dispatch])
 

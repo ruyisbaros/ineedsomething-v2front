@@ -80,12 +80,14 @@ const Streams = () => {
 
     //Get user all post reactions
     const getUserReactions = useCallback(async () => {
-        try {
-            const res = await getReactionsByUsername(storedUsername)
-            dispatch(addReaction(res.data.reactions))
-        } catch (error) {
-            toast.error(error?.response?.data?.message)
-        }
+        if (storedUsername) {
+           try {
+               const res = await getReactionsByUsername(storedUsername)
+               dispatch(addReaction(res.data.reactions))
+           } catch (error) {
+               toast.error(error?.response?.data?.message)
+           }
+       }
     }, [dispatch, storedUsername])
 
     useEffect(() => {
