@@ -15,6 +15,7 @@ import useLocalStorage from '@hooks/useLocalStorage';
 import { getReactionsByUsername } from '@services/api/reaction.service'
 import { addReaction } from '@redux/reactionsSlicers'
 import { getFollowings } from '@services/api/follower.service';
+import { fetchAllPosts, getAllPostsRedux } from '@redux/postStream'
 
 const Streams = () => {
     const { allPosts } = useSelector(store => store)
@@ -65,9 +66,18 @@ const Streams = () => {
             toast.error(error.response.data.message)
         }
     }
-    //console.log(allPosts.posts)
+    const getPosts = async () => {
+        try {
+            const res = await getAllPosts(1)
+            console.log(res.data)
+            dispatch(getAllPostsRedux({ posts: res.data.posts, totalPosts: res.data.totalPosts }))
+        } catch (error) {
+            toast.error(error.response.data.message)
+
+        }
+    }
     useEffect(() => {
-        dispatch(getPosts())
+        getPosts()
         dispatch(getUserSuggestions())
     }, [dispatch])
 

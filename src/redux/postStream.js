@@ -15,8 +15,13 @@ const allPostsSlicer = createSlice({
         addToPosts: (state, action) => {
             state.posts = [...action.payload]
         },
+        getAllPostsRedux: (state, action) => {
+            const { posts, totalPosts } = action.payload
+            state.posts = [...posts]
+            state.totalPostsCount = totalPosts
+        },
     },
-    extraReducers: (builder) => {
+   /*  extraReducers: (builder) => {
         builder.addCase(getPosts.pending, (state) => {
             state.isLoading = true
         })
@@ -28,11 +33,12 @@ const allPostsSlicer = createSlice({
         builder.addCase(getPosts.rejected, (state) => {
             state.isLoading = false
         })
-    }
+    } */
 });
 
 export const {
-    addToPosts
+    addToPosts,
+    getAllPostsRedux
 } = allPostsSlicer.actions;
 
 export default allPostsSlicer.reducer;

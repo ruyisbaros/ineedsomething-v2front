@@ -90,9 +90,9 @@ const Profile = () => {
         reader.addEventListener('load', async () => addImage(reader.result, type), false);
 
         if (selectedBackgroundImage && typeof selectedBackgroundImage !== 'string') {
-            reader.readAsDataURL(renameFile(selectedBackgroundImage));
+            reader.readAsDataURL(selectedBackgroundImage);
         } else if (selectedProfileImage && typeof selectedProfileImage !== 'string') {
-            reader.readAsDataURL(renameFile(selectedProfileImage));
+            reader.readAsDataURL(selectedProfileImage);
         } else {
             addImage(selectedBackgroundImage, type);
         }

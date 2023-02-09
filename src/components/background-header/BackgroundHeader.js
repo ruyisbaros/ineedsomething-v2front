@@ -125,7 +125,7 @@ const BackgroundHeader = ({
                 </div>}
                 <div className="profile-banner-image"
                     style={{ background: `${!selectedBackground ? user?.avatarColor : ""}` }}>
-                    {url && hideSettings && <div className="delete-btn" data-testid="delete-btn">
+                    {url && hideSettings && <div className="delete-btn" >
                         <Button label="Remove" className="remove" disabled={false}
                             handleClick={() => {
                                 removeBackgroundImage(user?.bgImageId)
@@ -137,13 +137,13 @@ const BackgroundHeader = ({
                 </div>
                 <div className="profile-banner-data">
                     <div data-testid="profile-pic" className="profile-pic"
-                        style={{ width: `${user?.profilePicture ? "180px" : ""}` }}
+                        style={{ width: `${user?.profilePicture ? "140px" : ""}` }}
                     >
                         <Avatar
                             name={user?.username}
                             bgColor={user?.avatarColor}
-                            textColor="#ffffff" s
-                            ize={180}
+                            textColor="#ffffff"
+                            size={140}
                             round={true}
                             avatarSrc={selectedProfileImage || user?.profilePicture} />
                         {hideSettings &&

@@ -15,12 +15,12 @@ export function generateAvatar(text, bcgColor, fgColor = "white") {
     const context = canvas.getContext("2d")
 
     context.fillStyle = bcgColor
-    context.fillRect(0, 0, 200, 200)
+    context.fillRect(0, 0, 300, 300)
     context.font = "normal 80px sans-serif"
     context.fillStyle = fgColor
     context.textAlign = "center"
     context.textBaseline = "middle"
-    context.fillText(text, 100, 100)
+    context.fillText(text, 155, 85)
 
     return canvas.toDataURL("image/png")
 }

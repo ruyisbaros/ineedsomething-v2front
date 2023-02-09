@@ -22,13 +22,3 @@ export async function createPostWithImage(body) {
     return res;
 }
 
-export const getPosts = createAsyncThunk("post/getPosts", async (name, { dispatch }) => {
-    try {
-        const res = await getAllPosts(1)
-        //console.log(res.data)
-        return res.data
-    } catch (error) {
-        toast.error(error.response.data.message)
-
-    }
-})
